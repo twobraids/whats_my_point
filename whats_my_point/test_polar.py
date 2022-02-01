@@ -1,12 +1,9 @@
 #!/usr/bin/env python3.10
 
 import unittest
-from whats_my_point.polar import PolarPoint
-from whats_my_point import (
-    Point,
-    IntPoint,
-)
 from math import pi
+from whats_my_point.polar import PolarPoint
+from whats_my_point import Point, IntPoint
 
 
 class TestConversions(unittest.TestCase):
@@ -46,6 +43,26 @@ class TestConversions(unittest.TestCase):
         self.assertAlmostEqual(pp4.φ, pp3.φ, 8)
         cp2 = Point(pp4)
         self.assertEqual(cp2, cp1)
+
+    def test_adding_two_2D_polars(self):
+        # along the x axis
+        pp1 = PolarPoint(1, 0)
+        pp2 = PolarPoint(2, 0)
+        self.assertEqual(pp1 + pp2, PolarPoint(3, 0))
+
+        # along the x axis
+        pp1 = PolarPoint(1, 0)
+        pp2 = PolarPoint(2, pi)
+        self.assertEqual(pp1 + pp2, PolarPoint(1, pi))
+
+        # with a perpenticular
+        pp1 = PolarPoint(4, 0)
+        pp2 = PolarPoint(4, pi / 2.0)
+        pp_sum = pp1 + pp2
+        self.assertAlmostEqual(pp_sum.r, 5.65685, 4)
+        self.assertAlmostEqual(pp_sum.θ, pi / 4.0, 8)
+        cp = Point(pp_sum)
+        self.assertEqual(cp, Point(4.0, 4.0))
 
 
 if __name__ == '__main__':

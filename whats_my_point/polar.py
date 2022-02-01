@@ -93,28 +93,28 @@ class PolarPoint(Vector):
     # Cartesian points are the base type, so arithmatic done by convsion to Point types
 
     def __add__(self, the_other):
-        return PolarPoint(self.as_cartesian().__add__(the_other.as_cartesian()))
+        return PolarPoint(self.as_cartesian() + the_other.as_cartesian())
 
     def __sub__(self, the_other):
-        return self._operation(the_other, sub)
+        return PolarPoint(self.as_cartesian() - the_other.as_cartesian())
 
     def __mul__(self, the_other):
-        return self._operation(the_other, mul)
+        return PolarPoint(self.as_cartesian() * the_other.as_cartesian())
 
     def __floordiv__(self, the_other):
-        return self._operation(the_other, floordiv)
+        return PolarPoint(self.as_cartesian() // the_other.as_cartesian())
 
     def __truediv__(self, the_other):
-        return self._operation(the_other, truediv)
+        return PolarPoint(self.as_cartesian() / the_other.as_cartesian())
 
     def __neg__(self):
-        return self.__class__(*(-c for c in self))
+        return PolarPoint(-self.as_cartesian())
 
     def trunc(self):
-        return self.__class__(*(int(c) for c in self))
+        return PolarPoint(self.as_cartesian().trunc())
 
     def round(self):
-        return self.__class__(*(round(c) for c in self))
+        return PolarPoint(self.as_cartesian().round())
 
     def dot(self, the_other):
-        return sum(a * b for a, b in zip(self, the_other))
+        return PolarPoint(self.as_cartesian().dot(the_other))
