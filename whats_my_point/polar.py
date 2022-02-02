@@ -1,5 +1,5 @@
 from numbers import Number
-from math import sin, cos, sqrt, atan, pi, atan2
+from math import sin, cos, sqrt, atan2
 
 
 from . import Vector, Point
@@ -19,6 +19,7 @@ class PolarPoint(Vector):
             return self[0]
         except IndexError:
             return 0
+
     ρ = rho
     r = rho
 
@@ -28,6 +29,7 @@ class PolarPoint(Vector):
             return self[1]
         except IndexError:
             return 0
+
     θ = theta
 
     @property
@@ -36,6 +38,7 @@ class PolarPoint(Vector):
             return self[2]
         except IndexError:
             return 0
+
     φ = phi
 
     # Point is the native coordinate type.  Any other type is responsible for coversions
@@ -44,24 +47,26 @@ class PolarPoint(Vector):
     @classmethod
     def convert_to_my_type(cls, the_other):
         match the_other, len(the_other):
-            case [PolarPoint(), n]:
+            case [PolarPoint(), _]:
                 return the_other
 
             case [Point() as p, 2]:
                 return cls(
-                    round(sqrt((p.x ** 2) + (p.y ** 2)), 10),
+                    round(sqrt((p.x**2) + (p.y**2)), 10),
                     atan2(p.y, p.x),
                 )
 
             case [Point() as p, 3]:
                 return cls(
-                   round(sqrt((p.x ** 2) + (p.y ** 2) + (p.z ** 2)), 10),
-                   atan2(p.y, p.x),
-                   atan2(sqrt((p.x ** 2) + (p.y ** 2)), p.z)
+                    round(sqrt((p.x**2) + (p.y**2) + (p.z**2)), 10),
+                    atan2(p.y, p.x),
+                    atan2(sqrt((p.x**2) + (p.y**2)), p.z),
                 )
 
             case _:
-                raise TypeError(f'No conversion defined for {the_other.__class__} to Polar Coordinates')
+                raise TypeError(
+                    f"No conversion defined for {the_other.__class__} to Polar Coordinates"
+                )
 
     def as_cartesian(self, cartesian_point_class=Point):
         match len(self):
@@ -79,7 +84,9 @@ class PolarPoint(Vector):
                 )
 
             case _:
-                raise TypeError(f'No conversion defined for coordinates with {len(self)} members')
+                raise TypeError(
+                    f"No conversion defined for coordinates with {len(self)} members"
+                )
 
     def as_polar(self, as_this_class):
         if as_this_class is self.__class__:

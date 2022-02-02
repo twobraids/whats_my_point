@@ -5,9 +5,8 @@ from collections.abc import Iterable
 
 
 class Vector(tuple):
-
     def __new__(cls, *args):
-        match(args):
+        match (args):
             case [Vector() as a_lone_vector_from_args]:
                 return cls.convert_to_my_type(a_lone_vector_from_args)
 
@@ -15,18 +14,13 @@ class Vector(tuple):
                 return super().__new__(
                     cls,
                     tuple(
-                        cls._judge_candidate_value(n)
-                        for n in a_lone_iterable_from_args
-                    )
+                        cls._judge_candidate_value(n) for n in a_lone_iterable_from_args
+                    ),
                 )
 
             case args_:
                 return super().__new__(
-                    cls,
-                    tuple(
-                        cls._judge_candidate_value(n)
-                        for n in args_
-                    )
+                    cls, tuple(cls._judge_candidate_value(n) for n in args_)
                 )
 
     @staticmethod
@@ -40,7 +34,6 @@ class Vector(tuple):
     def convert_to_my_type(cls, the_other):
         return the_other
 
-
     def _operation(self, the_other, a_dyadic_fn):
         # return a new instance with members that result from a_dyadic_fn applied to
         # this instance zipped with the_other
@@ -48,8 +41,7 @@ class Vector(tuple):
             case Number() as a_number:
                 return self.__class__(
                     *starmap(
-                        a_dyadic_fn,
-                        zip_longest(self, (a_number,), fillvalue=a_number)
+                        a_dyadic_fn, zip_longest(self, (a_number,), fillvalue=a_number)
                     )
                 )
 
@@ -57,7 +49,7 @@ class Vector(tuple):
                 return self.__class__(*starmap(a_dyadic_fn, zip(self, an_iterable)))
 
             case _:
-                raise TypeError(f'{the_other} disallowed')
+                raise TypeError(f"{the_other} disallowed")
 
     def __add__(self, the_other):
         return self._operation(the_other, add)
@@ -92,17 +84,13 @@ class Vector(tuple):
         return self.__class__(a_transform_matrix.dot(self))
 
 
-
 class Point(Vector):
-
     @staticmethod
     def _judge_candidate_value(a_potential_scalar):
         # accept only scalars as values
         if isinstance(a_potential_scalar, Number):
             return a_potential_scalar
-        raise TypeError(
-            f'members must be scalar, {a_potential_scalar} is not'
-        )
+        raise TypeError(f"members must be scalar, {a_potential_scalar} is not")
 
     @classmethod
     def convert_to_my_type(cls, the_other):
@@ -113,7 +101,6 @@ class Point(Vector):
             return self
         else:
             return as_this_class(self)
-
 
     @property
     def x(self):
@@ -136,12 +123,15 @@ class Point(Vector):
         except IndexError:
             return 0
 
+
 def create_significant_digits_Point_class(number_of_digits):
     class RoundedPoint(Point):
         def _judge_candidate_value(a_potential_scalar):
             # round all values up to a certain number of digits
             return round(a_potential_scalar, number_of_digits)
+
     return RoundedPoint
+
 
 class IntPoint(Point):
     @staticmethod

@@ -7,12 +7,8 @@ import unittest
 from whats_my_point import (
     Point,
     Vector,
-    IntPoint,
-    create_significant_digits_Point_class,
 )
-from whats_my_point.polar import PolarPoint
 from numpy import array, ndarray
-from math import pi
 
 
 class TestVector(unittest.TestCase):
@@ -85,11 +81,11 @@ class TestPoint(unittest.TestCase):
         try:
             Point((11, 26), 4)
         except TypeError as e:
-            self.assertTrue('(11, 26)' in str(e))
+            self.assertTrue("(11, 26)" in str(e))
         try:
             Point("x", "y", "z")
         except TypeError as e:
-            self.assertTrue('x' in str(e))
+            self.assertTrue("x" in str(e))
 
     def test_addition(self):
         p1 = Point(1, 3)
@@ -151,5 +147,5 @@ class TestPoint(unittest.TestCase):
         self.assertTrue(p13 == (-3, 1))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
