@@ -139,12 +139,12 @@ class Point(Vector):
 def create_significant_digits_Point_class(number_of_digits):
     class RoundedPoint(Point):
         def _judge_candidate_value(a_potential_scalar):
-            # accept only scalars as values
+            # round all values up to a certain number of digits
             return round(a_potential_scalar, number_of_digits)
     return RoundedPoint
 
 class IntPoint(Point):
     @staticmethod
     def _judge_candidate_value(a_potential_scalar):
-        # accept only scalars as values
+        # round all values to an Integer
         return round(a_potential_scalar)
