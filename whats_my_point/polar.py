@@ -14,11 +14,13 @@ class PolarPoint(Vector):
         raise TypeError(f'{cls} members must be scalar, "{a_potential_scalar}" is not')
 
     @property
-    def r(self):
+    def rho(self):
         try:
             return self[0]
         except IndexError:
             return 0
+    ρ = rho
+    r = rho
 
     @property
     def theta(self):
@@ -26,7 +28,6 @@ class PolarPoint(Vector):
             return self[1]
         except IndexError:
             return 0
-
     θ = theta
 
     @property
@@ -35,7 +36,6 @@ class PolarPoint(Vector):
             return self[2]
         except IndexError:
             return 0
-
     φ = phi
 
     # Point is the native coordinate type.  Any other type is responsible for coversions
@@ -48,14 +48,14 @@ class PolarPoint(Vector):
                 return the_other
 
             case [Point() as p, 2]:
-                return PolarPoint(
+                return cls(
                     round(sqrt((p.x ** 2) + (p.y ** 2)), 10),
                     atan2(p.y, p.x),
                 )
 
             case [Point() as p, 3]:
-                return PolarPoint(
-                   round(sqrt((p.x ** 2) + (p.y ** 2) + (p.z ** 2))),
+                return cls(
+                   round(sqrt((p.x ** 2) + (p.y ** 2) + (p.z ** 2)), 10),
                    atan2(p.y, p.x),
                    atan2(sqrt((p.x ** 2) + (p.y ** 2)), p.z)
                 )
@@ -67,15 +67,15 @@ class PolarPoint(Vector):
         match len(self):
             case 2:
                 return cartesian_point_class(
-                    round(self.r * cos(self.θ), 10),
-                    round(self.r * sin(self.θ), 10),
+                    round(self.ρ * cos(self.θ), 10),
+                    round(self.ρ * sin(self.θ), 10),
                 )
 
             case 3:
                 return cartesian_point_class(
-                    round(self.r * sin(self.φ) * cos(self.θ), 10),
-                    round(self.r * sin(self.φ) * sin(self.θ), 10),
-                    round(self.r * cos(self.φ), 10),
+                    round(self.ρ * sin(self.φ) * cos(self.θ), 10),
+                    round(self.ρ * sin(self.φ) * sin(self.θ), 10),
+                    round(self.ρ * cos(self.φ), 10),
                 )
 
             case _:

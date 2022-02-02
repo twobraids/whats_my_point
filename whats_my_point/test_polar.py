@@ -59,7 +59,7 @@ class TestConversions(unittest.TestCase):
         pp1 = PolarPoint(4, 0)
         pp2 = PolarPoint(4, pi / 2.0)
         pp_sum = pp1 + pp2
-        self.assertAlmostEqual(pp_sum.r, 5.65685, 4)
+        self.assertAlmostEqual(pp_sum.ρ, 5.65685, 4)
         self.assertAlmostEqual(pp_sum.θ, pi / 4.0, 8)
         cp = Point(pp_sum)
         self.assertEqual(cp, Point(4.0, 4.0))
