@@ -41,20 +41,20 @@ class Vector(tuple):
         return the_other
 
 
-    def _operation(self, the_other, the_operation):
-        # return a new instance with members that result from the_operation applied to
+    def _operation(self, the_other, a_dyadic_fn):
+        # return a new instance with members that result from a_dyadic_fn applied to
         # this instance zipped with the_other
         match (the_other):
             case Number() as a_number:
                 return self.__class__(
                     *starmap(
-                        the_operation,
+                        a_dyadic_fn,
                         zip_longest(self, (a_number,), fillvalue=a_number)
                     )
                 )
 
             case Iterable() as an_iterable:
-                return self.__class__(*starmap(the_operation, zip(self, an_iterable)))
+                return self.__class__(*starmap(a_dyadic_fn, zip(self, an_iterable)))
 
             case _:
                 raise TypeError(f'{the_other} disallowed')
