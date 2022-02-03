@@ -47,18 +47,18 @@ class PolarPoint(Vector):
     @classmethod
     def convert_to_my_type(cls, the_other):
         match the_other, len(the_other):
-            case [PolarPoint(), _]:
+            case[PolarPoint(), _]:
                 return the_other
 
-            case [Point() as p, 2]:
+            case[Point() as p, 2]:
                 return cls(
-                    round(sqrt((p.x**2) + (p.y**2)), 10),
+                    sqrt((p.x**2) + (p.y**2)),
                     atan2(p.y, p.x),
                 )
 
-            case [Point() as p, 3]:
+            case[Point() as p, 3]:
                 return cls(
-                    round(sqrt((p.x**2) + (p.y**2) + (p.z**2)), 10),
+                    sqrt((p.x**2) + (p.y**2) + (p.z**2)),
                     atan2(p.y, p.x),
                     atan2(sqrt((p.x**2) + (p.y**2)), p.z),
                 )
@@ -72,15 +72,15 @@ class PolarPoint(Vector):
         match len(self):
             case 2:
                 return cartesian_point_class(
-                    round(self.ρ * cos(self.θ), 10),
-                    round(self.ρ * sin(self.θ), 10),
+                    self.ρ * cos(self.θ),
+                    self.ρ * sin(self.θ),
                 )
 
             case 3:
                 return cartesian_point_class(
-                    round(self.ρ * sin(self.φ) * cos(self.θ), 10),
-                    round(self.ρ * sin(self.φ) * sin(self.θ), 10),
-                    round(self.ρ * cos(self.φ), 10),
+                    self.ρ * sin(self.φ) * cos(self.θ),
+                    self.ρ * sin(self.φ) * sin(self.θ),
+                    self.ρ * cos(self.φ),
                 )
 
             case _:
