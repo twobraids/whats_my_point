@@ -7,6 +7,8 @@ import unittest
 from whats_my_point import (
     Point,
     Vector,
+    IntPoint,
+    create_significant_digits_Point_class
 )
 from numpy import array, ndarray
 
@@ -145,6 +147,31 @@ class TestPoint(unittest.TestCase):
         trans3 = array(((0, -1), (1, 0)))
         p13 = p1.transform(trans3)
         self.assertTrue(p13 == (-3, 1))
+
+class TestRoundedPoint(unittest.TestCase):
+
+    def test_IntPoint(self):
+        self.assertEqual(IntPoint.__name__, "IntPoint")
+
+        ip = IntPoint(1, 2, 3)
+        self.assertEqual(ip, (1, 2, 3))
+
+        ip = IntPoint(1.1, 2.5, 3.8)
+        self.assertEqual(ip, (1, 2, 4))
+
+        p = Point(9.9, 10, -2.2)
+        ip = IntPoint(p)
+        self.assertEqual(ip, (10, 10, -2))
+
+    def dont_test_Rounded2Point(self):
+        Rounded2Point = create_significant_digits_Point_class(2)
+        self.assertEqual(Rounded2Point.__name__, "Rounded2Point")
+
+        ip = Rounded2Point(1.1111, 2.222, 3.3333)
+        self.assertEqual(ip, (1.11, 2.22, 3.33))
+
+        ip = Rounded2Point(1.111, 2.225, 3.336)
+        self.assertEqual(ip, (1.11, 2.23, 3.34))
 
 
 if __name__ == "__main__":

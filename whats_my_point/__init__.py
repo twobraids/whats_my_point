@@ -6,11 +6,11 @@ from collections.abc import Iterable
 
 class Vector(tuple):
     def __new__(cls, *args):
-        match (args):
-            case [Vector() as a_lone_vector_from_args]:
+        match(args):
+            case[Vector() as a_lone_vector_from_args]:
                 return cls.convert_to_my_type(a_lone_vector_from_args)
 
-            case [Iterable() as a_lone_iterable_from_args]:
+            case[Iterable() as a_lone_iterable_from_args]:
                 return super().__new__(
                     cls,
                     tuple(
@@ -37,7 +37,7 @@ class Vector(tuple):
     def _operation(self, the_other, a_dyadic_fn):
         # return a new instance with members that result from a_dyadic_fn applied to
         # this instance zipped with the_other
-        match (the_other):
+        match(the_other):
             case Number() as a_number:
                 return self.__class__(
                     *starmap(
@@ -80,7 +80,7 @@ class Vector(tuple):
 
     def transform(self, a_transform_matrix):
         # a_transform_matrix intented to be a numpy ndarray
-        # or something with a similar API
+        # or something with a similar Aπ
         return self.__class__(a_transform_matrix.dot(self))
 
 
@@ -94,13 +94,20 @@ class Point(Vector):
 
     @classmethod
     def convert_to_my_type(cls, the_other):
-        return the_other.as_cartesian(cls)
+        match(the_other):
+            case cls():  # the other is of cls
+                return the_other
+            case Point():  # the other is a subclass of Point
+                return cls(*the_other)
+            case Vector():  # the other is a vector, but of something other that Point lineage
+                return the_other.as_cartesian(cls)
+            case Iterable():
+                return cls()  # some sort of iterable
+            case _:
+                raise TypeError(f"Don't know how to convert {the_other.__class__} to {cls}")
 
     def as_cartesian(self, as_this_class):
-        if as_this_class is self.__class__:
-            return self
-        else:
-            return as_this_class(self)
+        return self
 
     @property
     def x(self):
@@ -124,17 +131,23 @@ class Point(Vector):
             return 0
 
 
-def create_significant_digits_Point_class(number_of_digits):
+def create_significant_digits_Point_class(number_of_digits=None):
+
     class RoundedPoint(Point):
         def _judge_candidate_value(a_potential_scalar):
             # round all values up to a certain number of digits
+            # print(f'rounding {a_potential_scalar} by {number_of_digits} to get {round(a_potential_scalar, number_of_digits)}')
             return round(a_potential_scalar, number_of_digits)
 
+        # @classmethod
+        # def convert_to_my_type(cls, the_other):
+            # return cls(*the_other)
+
+    if number_of_digits is None:
+        RoundedPoint.__name__ = "IntPoint"
+    else:
+        RoundedPoint.__name__ = f"Rounded{number_of_digits}Point"
     return RoundedPoint
 
 
-class IntPoint(Point):
-    @staticmethod
-    def _judge_candidate_value(a_potential_scalar):
-        # round all values to an Integer
-        return round(a_potential_scalar)
+IntPoint = create_significant_digits_Point_class()
