@@ -8,7 +8,7 @@ from whats_my_point import (
     Point,
     Vector,
     IntPoint,
-    create_significant_digits_Point_class
+    create_RoundedNPoint_class
 )
 from numpy import array, ndarray
 
@@ -164,7 +164,7 @@ class TestRoundedPoint(unittest.TestCase):
         self.assertEqual(ip, (10, 10, -2))
 
     def test_Rounded2Point(self):
-        Rounded2Point = create_significant_digits_Point_class(2)
+        Rounded2Point = create_RoundedNPoint_class(2)
         self.assertEqual(Rounded2Point.__name__, "Rounded2Point")
 
         ip = Rounded2Point(1.1111, 2.222, 3.3333)
@@ -177,13 +177,15 @@ class TestRoundedPoint(unittest.TestCase):
         self.assertEqual(ip, (1.11, 2.23, 3.34))
 
     def test_Rounded8Point(self):
-        Rounded2Point = create_significant_digits_Point_class(8)
+        Rounded2Point = create_RoundedNPoint_class(8)
         self.assertEqual(Rounded2Point.__name__, "Rounded8Point")
 
         ip = Rounded2Point(1.1111111111, 2.22222222222, 3.3333333333)
         self.assertEqual(ip, (1.11111111, 2.22222222, 3.33333333))
 
         ip = Rounded2Point(1.11111111, 2.222222225, 3.3333333333)
+        # note the difference in the result for the y in test_Rounded2Point
+        # above. For floats, sometimes a 5 rounds up, sometimes it rounds down.
         self.assertEqual(ip, (1.11111111, 2.22222222, 3.33333333))
 
 

@@ -131,19 +131,19 @@ class Point(Vector):
             return 0
 
 
-def create_significant_digits_Point_class(number_of_digits=None):
+def create_RoundedNPoint_class(number_of_digits=None):
 
-    class RoundedPoint(Point):
+    class RoundedNPoint(Point):
         def _judge_candidate_value(a_potential_scalar):
             # round all values up to a certain number of digits
             # print(f'rounding {a_potential_scalar} by {number_of_digits} to get {round(a_potential_scalar, number_of_digits)}')
             return round(a_potential_scalar, number_of_digits)
 
     if number_of_digits is None:
-        RoundedPoint.__name__ = "IntPoint"
+        RoundedNPoint.__name__ = "IntPoint"
     else:
-        RoundedPoint.__name__ = f"Rounded{number_of_digits}Point"
-    return RoundedPoint
+        RoundedNPoint.__name__ = f"Rounded{number_of_digits}Point"
+    return RoundedNPoint
 
 
-IntPoint = create_significant_digits_Point_class()
+IntPoint = create_RoundedNPoint_class()
