@@ -163,7 +163,7 @@ class TestRoundedPoint(unittest.TestCase):
         ip = IntPoint(p)
         self.assertEqual(ip, (10, 10, -2))
 
-    def dont_test_Rounded2Point(self):
+    def test_Rounded2Point(self):
         Rounded2Point = create_significant_digits_Point_class(2)
         self.assertEqual(Rounded2Point.__name__, "Rounded2Point")
 
@@ -171,7 +171,20 @@ class TestRoundedPoint(unittest.TestCase):
         self.assertEqual(ip, (1.11, 2.22, 3.33))
 
         ip = Rounded2Point(1.111, 2.225, 3.336)
+        # The y component of the result looks odd because of
+        # the inability of float data type to correctly do
+        # base 10 Bankers' Rounding for many cases
         self.assertEqual(ip, (1.11, 2.23, 3.34))
+
+    def test_Rounded8Point(self):
+        Rounded2Point = create_significant_digits_Point_class(8)
+        self.assertEqual(Rounded2Point.__name__, "Rounded8Point")
+
+        ip = Rounded2Point(1.1111111111, 2.22222222222, 3.3333333333)
+        self.assertEqual(ip, (1.11111111, 2.22222222, 3.33333333))
+
+        ip = Rounded2Point(1.11111111, 2.222222225, 3.3333333333)
+        self.assertEqual(ip, (1.11111111, 2.22222222, 3.33333333))
 
 
 if __name__ == "__main__":

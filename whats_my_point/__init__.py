@@ -139,10 +139,6 @@ def create_significant_digits_Point_class(number_of_digits=None):
             # print(f'rounding {a_potential_scalar} by {number_of_digits} to get {round(a_potential_scalar, number_of_digits)}')
             return round(a_potential_scalar, number_of_digits)
 
-        # @classmethod
-        # def convert_to_my_type(cls, the_other):
-            # return cls(*the_other)
-
     if number_of_digits is None:
         RoundedPoint.__name__ = "IntPoint"
     else:
