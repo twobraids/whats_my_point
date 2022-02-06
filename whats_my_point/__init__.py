@@ -97,33 +97,34 @@ class Point(Vector):
         match(the_other):
             case cls():  # the other is of cls
                 return the_other
+
             case Point():  # the other is a subclass of Point
                 return cls(*the_other)
-            case Vector():  # the other is a vector, but of something other that Point lineage
+
+            case Vector():  # the other is a vector, but of something other than Point lineage
                 return the_other.as_cartesian(cls)
-            case Iterable():
-                return cls()  # some sort of iterable
+
             case _:
-                raise TypeError(f"Don't know how to convert {the_other.__class__} to {cls}")
+                raise TypeError(f"No conversion defined for {the_other.__class__} to {cls}")
 
     def as_cartesian(self, as_this_class):
         return self
 
-    @property
+    @ property
     def x(self):
         try:
             return self[0]
         except IndexError:
             return 0
 
-    @property
+    @ property
     def y(self):
         try:
             return self[1]
         except IndexError:
             return 0
 
-    @property
+    @ property
     def z(self):
         try:
             return self[2]
