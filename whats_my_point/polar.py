@@ -1,6 +1,8 @@
 from numbers import Number
 from math import sin, cos, sqrt, atan2
 
+from math import pi as π
+
 
 from . import Vector, Point
 
@@ -47,16 +49,16 @@ class PolarPoint(Vector):
     @classmethod
     def convert_to_my_type(cls, the_other):
         match the_other, len(the_other):
-            case[PolarPoint(), _]:
+            case [PolarPoint(), _]:
                 return the_other
 
-            case[Point() as p, 2]:
+            case [Point() as p, 2]:
                 return cls(
                     sqrt((p.x**2) + (p.y**2)),
                     atan2(p.y, p.x),
                 )
 
-            case[Point() as p, 3]:
+            case [Point() as p, 3]:
                 return cls(
                     sqrt((p.x**2) + (p.y**2) + (p.z**2)),
                     atan2(p.y, p.x),
@@ -100,19 +102,22 @@ class PolarPoint(Vector):
     # Cartesian points are the base type, so arithmatic done by convsion to Point types
 
     def __add__(self, the_other):
-        return PolarPoint(self.as_cartesian() + the_other.as_cartesian())
+        return PolarPoint(self.as_cartesian() + the_other)
 
     def __sub__(self, the_other):
-        return PolarPoint(self.as_cartesian() - the_other.as_cartesian())
+        return PolarPoint(self.as_cartesian() - the_other)
 
     def __mul__(self, the_other):
-        return PolarPoint(self.as_cartesian() * the_other.as_cartesian())
+        return PolarPoint(self.as_cartesian() * the_other)
 
     def __floordiv__(self, the_other):
-        return PolarPoint(self.as_cartesian() // the_other.as_cartesian())
+        return PolarPoint(self.as_cartesian() // the_other)
 
     def __truediv__(self, the_other):
-        return PolarPoint(self.as_cartesian() / the_other.as_cartesian())
+        return PolarPoint(self.as_cartesian() / the_other)
+
+    def __pow__(self, the_other):
+        return PolarPoint(self.as_cartesian() ** the_other)
 
     def __neg__(self):
         return PolarPoint(-self.as_cartesian())

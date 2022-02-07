@@ -29,14 +29,14 @@ class unit(object):
 
 
 class Distance:
-    au = unit('au')
-    km = unit('km', AU_KM, 'au')
+    au = unit("au")
+    km = unit("km", AU_KM, "au")
 
 
 d = Distance.au(1.524)
-print('au:', d.au)
-print('km:', d.km)
+print("au:", d.au)
+print("km:", d.km)
 print()
 d = Distance.km(217)
-print('au:', d.au)
-print('km:', d.km)
+print("au:", d.au)
+print("km:", d.km)

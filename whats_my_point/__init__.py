@@ -1,16 +1,16 @@
 from itertools import zip_longest, starmap
-from operator import sub, add, mul, truediv, floordiv
+from operator import sub, add, mul, truediv, floordiv, pow
 from numbers import Number
 from collections.abc import Iterable
 
 
 class Vector(tuple):
     def __new__(cls, *args):
-        match(args):
-            case[Vector() as a_lone_vector_from_args]:
+        match (args):
+            case [Vector() as a_lone_vector_from_args]:
                 return cls.convert_to_my_type(a_lone_vector_from_args)
 
-            case[Iterable() as a_lone_iterable_from_args]:
+            case [Iterable() as a_lone_iterable_from_args]:
                 return super().__new__(
                     cls,
                     tuple(
@@ -31,18 +31,28 @@ class Vector(tuple):
         return a_candidate
 
     @classmethod
-    def convert_to_my_type(cls, the_other):
-        return the_other
+    def convert_to_my_type(cls, the_other, target_type=None):
+        match the_other:
+            case cls():
+                return the_other
+            case _:
+                return cls(the_other)
 
     def _operation(self, the_other, a_dyadic_fn):
         # return a new instance with members that result from a_dyadic_fn applied to
         # this instance zipped with the_other
-        match(the_other):
+        match (the_other):
             case Number() as a_number:
                 return self.__class__(
                     *starmap(
                         a_dyadic_fn, zip_longest(self, (a_number,), fillvalue=a_number)
                     )
+                )
+
+            case Vector() as a_vector:
+                the_other_as_my_type = self.convert_to_my_type(a_vector, self.__class__)
+                return self.__class__(
+                    *starmap(a_dyadic_fn, zip(self, the_other_as_my_type))
                 )
 
             case Iterable() as an_iterable:
@@ -65,6 +75,9 @@ class Vector(tuple):
 
     def __truediv__(self, the_other):
         return self._operation(the_other, truediv)
+
+    def __pow__(self, the_other):
+        return self._operation(the_other, pow)
 
     def __neg__(self):
         return self.__class__(*(-c for c in self))
@@ -93,38 +106,40 @@ class Point(Vector):
         raise TypeError(f"members must be scalar, {a_potential_scalar} is not")
 
     @classmethod
-    def convert_to_my_type(cls, the_other):
-        match(the_other):
-            case cls():  # the other is of cls
+    def convert_to_my_type(cls, the_other, target_type=None):
+        match (the_other):
+            case cls():  # the other's class is cls exactly
                 return the_other
 
-            case Point():  # the other is a subclass of Point
+            case Point():  # the other's class is a subclass of Point
                 return cls(*the_other)
 
-            case Vector():  # the other is a vector, but of something other than Point lineage
+            case Vector():  # the other is a vector, but other than the Point lineage
                 return the_other.as_cartesian(cls)
 
             case _:
-                raise TypeError(f"No conversion defined for {the_other.__class__} to {cls}")
+                raise TypeError(
+                    f"No conversion defined for {the_other.__class__} to {cls}"
+                )
 
-    def as_cartesian(self, as_this_class):
+    def as_cartesian(self, cartesian_point_class=None):
         return self
 
-    @ property
+    @property
     def x(self):
         try:
             return self[0]
         except IndexError:
             return 0
 
-    @ property
+    @property
     def y(self):
         try:
             return self[1]
         except IndexError:
             return 0
 
-    @ property
+    @property
     def z(self):
         try:
             return self[2]
@@ -133,7 +148,6 @@ class Point(Vector):
 
 
 def create_RoundedNPoint_class(number_of_digits=None):
-
     class RoundedNPoint(Point):
         def _judge_candidate_value(a_potential_scalar):
             # round all values up to a certain number of digits
@@ -148,3 +162,38 @@ def create_RoundedNPoint_class(number_of_digits=None):
 
 
 IntPoint = create_RoundedNPoint_class()
+
+
+def iter_no_consectutive_repeats(an_iterator):
+    previous_value = None
+    for a_value in an_iterator:
+        if a_value != previous_value:
+            yield a_value
+        previous_value = a_value
+
+
+def linear_transform(start, stop, number_of_iterations):
+    increment = (stop - start) / number_of_iterations
+    for i in range(number_of_iterations):
+        yield start + (increment * i)
+
+
+def sin_transform(start, stop, number_of_iterations):
+    pass
+
+
+def smoothing_transform(start, stop, number_of_iterations):
+    pass
+
+
+def iter_linearly_between(
+    start_point, end_point, number_of_iterations, target_point_type=Point
+):
+    base_point_type = start_point.__class__
+    for p in zip(
+        *(
+            linear_transform(x, y, number_of_iterations)
+            for x, y in zip(start_point, end_point)
+        )
+    ):
+        yield target_point_type(base_point_type(*p))

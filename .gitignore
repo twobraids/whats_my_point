@@ -1,4 +1,5 @@
 __pycache__
-whats-the-point.code-workspace
-whats-the-point.wpr
-whats-the-point.wpu
+whats_my_point.wpr
+whats_my_point.wpu
+*/.vscode
+
