@@ -4,7 +4,7 @@ from math import sin, cos, sqrt, atan2
 from math import pi as π
 
 
-from . import Vector, Point
+from whats_my_point import Vector, Point
 
 
 class PolarPoint(Vector):
@@ -65,10 +65,11 @@ class PolarPoint(Vector):
                     atan2(sqrt((p.x**2) + (p.y**2)), p.z),
                 )
 
-            case _:
-                raise TypeError(
-                    f"No conversion defined for {the_other.__class__} to Polar Coordinates"
-                )
+            case [a_sequence, _]:
+                # we don't know what this sequence represents.
+                # To be consistent with the constructor, assume they are
+                # series of components of a polar point
+                return cls(*a_sequence)
 
     def as_cartesian(self, cartesian_point_class=Point):
         match len(self):
