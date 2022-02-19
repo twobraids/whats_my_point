@@ -198,6 +198,12 @@ class TestConversions(unittest.TestCase):
         cp4 = Point(0, -10)
         self.assertEqual(pp4 + cp4, PolarPoint(cp4 + pp4))
 
+    def test_failure_of_math_with_polar_and_cartesian(self):
+        pp = PolarPoint(range(5))
+        cp = Point((i * 10 for i in range(5)))
+        self.assertRaises(TypeError, lambda a, b: a + b, pp, cp)
+        self.assertRaises(TypeError, lambda a, b: b + a, pp, cp)
+
     def test_math_with_polar_and_scalar(self):
         pp1 = PolarPoint(10, π / 3.0)
         cp1 = Point(2, 2)
@@ -206,6 +212,38 @@ class TestConversions(unittest.TestCase):
         self.assertEqual(pp1 / 2, pp1 / cp1)
         self.assertEqual(pp1 // 2, pp1 // cp1)
         self.assertEqual(pp1**2, pp1**cp1)
+
+    def test_as_my_type_1(self):
+        cp1 = Point(2.2, 3.3)
+        ip1 = IntPoint(4, 5)
+        ip2 = ip1.as_my_type(cp1)
+        self.assertTrue(isinstance(ip2, IntPoint))
+        self.assertEqual(ip2, (2, 3))
+
+    def test_as_my_type_2(self):
+        cp1 = Point(2.2, 3.3)
+        ip1 = IntPoint(4, 5)
+        cp2 = cp1.as_my_type(ip1)
+        self.assertTrue(isinstance(cp2, Point))
+        self.assertEqual(cp2, (4.0, 5.0))
+
+    def test_as_my_type_3(self):
+        cp1 = Point(10, 10)
+        pp1 = PolarPoint(cp1)
+        pp2 = pp1.as_my_type(cp1)
+        self.assertEqual(pp1, pp2)
+
+    def test_as_my_type_4(self):
+        pp1 = PolarPoint(10, π / 3.0)
+        pp2 = pp1.as_my_type(3)
+        self.assertEqual(pp2, (3,))
+
+
+    def test_as_my_type_5(self):
+        cp1 = Point(range(5))
+        pp1 = PolarPoint(10, π / 3.0)
+        self.assertRaises(TypeError, pp1.as_my_type, cp1)
+
 
 
 if __name__ == "__main__":

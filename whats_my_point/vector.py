@@ -7,38 +7,42 @@ from operator import sub, add, mul, truediv, floordiv, pow
 class Vector(tuple):
     def __new__(cls, *args):
         match (args):
-            case [cls() as a_lone_cls_instance_from_args]:
-                return a_lone_cls_instance_from_args
+            case [cls() as an_instance_of_cls]:
+                # match instances of this cls or derivatives
+                return an_instance_of_cls
 
-            case [Vector() as a_lone_vector_from_args]:
-                return cls.convert_to_my_type(a_lone_vector_from_args)
+            case [Vector() as an_instance_of_vector]:
+                # match any instance of the Vector family not directly in line with cls
+                return cls.as_my_type(an_instance_of_vector)
 
-            case [Iterable() as a_lone_iterable_from_args]:
+            case [Iterable() as an_iterable]:
+                # match any old iterable like a generator or numpy array
                 return super().__new__(
                     cls,
-                    tuple(
-                        cls._judge_candidate_value(n) for n in a_lone_iterable_from_args
-                    ),
+                    tuple(cls._judge_candidate_value(n) for n in an_iterable),
                 )
 
             case args_:
+                # descrete values passed in rather than a collection
                 return super().__new__(
                     cls, tuple(cls._judge_candidate_value(n) for n in args_)
                 )
 
     @staticmethod
     def _judge_candidate_value(a_candidate):
-        # Subclasses can override this method to restrict potential vector members
+        # Subclasses can override this method to restrict potential component members
         # by considering characteristics like type or value. Unacceptable candidates
         # should raise a TypeError. Acceptable candidates should be returned.
         return a_candidate
 
     @classmethod
-    def convert_to_my_type(cls, the_other):
+    def as_my_type(cls, the_other):
         match the_other:
             case cls():
+                # match of this cls or derivatives
                 return the_other
             case _:
+                # match anything else and try to construct a new cls instance
                 return cls(the_other)
 
     def _operation(self, the_other, a_dyadic_fn):
@@ -46,6 +50,7 @@ class Vector(tuple):
         # this instance zipped with the_other
         match (the_other):
             case Number() as a_number:
+                # match scalars
                 return self.__class__(
                     *starmap(
                         a_dyadic_fn, zip_longest(self, (a_number,), fillvalue=a_number)
@@ -53,15 +58,18 @@ class Vector(tuple):
                 )
 
             case Vector() as a_vector:
-                the_other_as_my_type = self.convert_to_my_type(a_vector)
+                # match any instance of the Vector family
+                the_other_as_my_type = self.as_my_type(a_vector)
                 return self.__class__(
                     *starmap(a_dyadic_fn, zip(self, the_other_as_my_type))
                 )
 
             case Iterable() as an_iterable:
+                # match any other type of iterable
                 return self.__class__(*starmap(a_dyadic_fn, zip(self, an_iterable)))
 
             case _:
+                # no idea how to convert for an operation
                 raise TypeError(f"{the_other} disallowed")
 
     def __add__(self, the_other):
@@ -96,5 +104,5 @@ class Vector(tuple):
 
     def transform(self, a_transform_matrix):
         # a_transform_matrix intented to be a numpy ndarray
-        # or something with a similar Aπ
+        # or something with a similar API
         return self.__class__(a_transform_matrix.dot(self))

@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 from numbers import Number
 from math import sin, cos, sqrt, atan2
 
@@ -22,8 +23,8 @@ class PolarPoint(Vector):
         except IndexError:
             return 0
 
-    ρ = rho
     r = rho
+    ρ = rho
 
     @property
     def theta(self):
@@ -46,30 +47,54 @@ class PolarPoint(Vector):
     # Point is the native coordinate type.  Any other type is responsible for coversions
     # both to and from that type.
 
+    @staticmethod
+    def len(n):
+        try:
+            return len(n)
+        except TypeError:
+            return None
+
     @classmethod
-    def convert_to_my_type(cls, the_other):
-        match the_other, len(the_other):
+    def as_my_type(cls, the_other):
+        match the_other, cls.len(the_other):
+
             case [PolarPoint(), _]:
+                # identity case
                 return the_other
 
             case [Point() as p, 2]:
+                # 2D Cartesion conversion case
                 return cls(
                     sqrt((p.x**2) + (p.y**2)),
                     atan2(p.y, p.x),
                 )
 
             case [Point() as p, 3]:
+                # 3D Cartesion conversion case
                 return cls(
                     sqrt((p.x**2) + (p.y**2) + (p.z**2)),
                     atan2(p.y, p.x),
                     atan2(sqrt((p.x**2) + (p.y**2)), p.z),
                 )
 
-            case [a_sequence, _]:
+            case [Point() as p, _]:
+                # greater than 3D conversion case
+                raise TypeError(f"{the_other} is greater than 3D, don't know how to convert to Polar")
+
+            case [Iterable() as an_iterator, _]:
                 # we don't know what this sequence represents.
                 # To be consistent with the constructor, assume they are
                 # series of components of a polar point
-                return cls(*a_sequence)
+                return cls(*an_iterator)
+
+            case [Number() as n, _]:
+                # a rare case where ρ is n and θ, φ are zero.
+                return cls(n)
+
+            case _:
+                raise TypeError(f"Don't know how to convert {the_other} to Polar")
+
+
 
     def as_cartesian(self, cartesian_point_class=Point):
         match len(self):

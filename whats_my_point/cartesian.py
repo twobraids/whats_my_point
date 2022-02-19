@@ -14,22 +14,25 @@ class CartesianPoint(Vector):
         raise TypeError(f"members must be scalar, {a_potential_scalar} is not")
 
     @classmethod
-    def convert_to_my_type(cls, the_other):
+    def as_my_type(cls, the_other):
         match (the_other):
-            case cls():  # the other's class is cls exactly
+            case cls():
+                # Match an instance of this cls or its derivatives - identity case
+                #   For example cls may be CartesianPoint but IntPoints would match
+                #   an IntPoint is a CartesianPoint
                 return the_other
 
-            case CartesianPoint():  # the other's class is a subclass of Point
-                # this matches intances of Point and its subclasses
-                return cls(*the_other)
-
-            case Vector():  # the other is a vector, but other than the Point lineage
+            case Vector():
+                # match an instance of base class Vector, but of another lineage than CartesianPoint
                 try:
                     return the_other.as_cartesian(cls)
                 except AttributeError:
+                    # Vector itself doesn't know anything about cartesian, so just
+                    # make a new instance of cls from it
                     return cls(*the_other)
 
             case Iterable():
+                # make an instance of cls from any iterable
                 return cls(*the_other)
 
             case _:
@@ -77,4 +80,5 @@ def create_RoundedNPoint_class(number_of_digits=None):
     return RoundedNPoint
 
 
+Point = CartesianPoint
 IntPoint = create_RoundedNPoint_class()
