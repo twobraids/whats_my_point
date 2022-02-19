@@ -238,12 +238,10 @@ class TestConversions(unittest.TestCase):
         pp2 = pp1.as_my_type(3)
         self.assertEqual(pp2, (3,))
 
-
     def test_as_my_type_5(self):
         cp1 = Point(range(5))
         pp1 = PolarPoint(10, π / 3.0)
         self.assertRaises(TypeError, pp1.as_my_type, cp1)
-
 
 
 if __name__ == "__main__":

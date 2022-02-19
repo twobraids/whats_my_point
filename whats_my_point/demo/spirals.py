@@ -2,7 +2,12 @@
 from math import pi as π
 from PIL import Image, ImageDraw
 
-from whats_my_point import Point, iter_linearly_between
+from whats_my_point import (
+    Point,
+    PolarPoint,
+    iter_linearly_between,
+    iter_no_consectutive_repeats,
+)
 
 from whats_my_point.polar import PolarPoint
 
@@ -20,9 +25,7 @@ class Canvas:
                 (self.previous_point, end_point), fill="rgb(0, 255, 0)"
             )
             if not (step_counter % 5):
-                self.an_image.save(
-                    f"/home/lars/Pictures/spiral_{self.image_counter:04d}.png"
-                )
+                self.an_image.save(f"./spiral_{self.image_counter:04d}.png")
                 self.image_counter += 1
         self.previous_point = end_point
 
@@ -41,13 +44,15 @@ def looping_spiral(a_canvas):
     # create a couple iterators that will produce a sequence of polar points
     # that spin in lockstep with each other
     for step_counter, (outer_rotator_point, inner_rotator_point) in enumerate(
-        zip(
-            iter_linearly_between(
-                outer_rotator_origin, outer_rotator_destination, 2000
-            ),
-            iter_linearly_between(
-                inner_rotator_origin, inner_rotator_destination, 2000
-            ),
+        iter_no_consectutive_repeats(
+            zip(
+                iter_linearly_between(
+                    outer_rotator_origin, outer_rotator_destination, 2000
+                ),
+                iter_linearly_between(
+                    inner_rotator_origin, inner_rotator_destination, 2000
+                ),
+            )
         )
     ):
         # add the cartesian origin point with values from the spinning polar points

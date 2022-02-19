@@ -79,7 +79,9 @@ class PolarPoint(Vector):
 
             case [Point() as p, _]:
                 # greater than 3D conversion case
-                raise TypeError(f"{the_other} is greater than 3D, don't know how to convert to Polar")
+                raise TypeError(
+                    f"{the_other} is greater than 3D, don't know how to convert to Polar"
+                )
 
             case [Iterable() as an_iterator, _]:
                 # we don't know what this sequence represents.
@@ -93,8 +95,6 @@ class PolarPoint(Vector):
 
             case _:
                 raise TypeError(f"Don't know how to convert {the_other} to Polar")
-
-
 
     def as_cartesian(self, cartesian_point_class=Point):
         match len(self):

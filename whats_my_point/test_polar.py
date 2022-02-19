@@ -51,7 +51,7 @@ class TestPolar(unittest.TestCase):
         # but we can't do much with it
         pp = PolarPoint(range(5))
         self.assertEqual(pp, (0, 1, 2, 3, 4))
-        self.assertRaises(TypeError, lambda a: a ** 2, pp)
+        self.assertRaises(TypeError, lambda a: a**2, pp)
 
     def test_adding_two_2D_polars(self):
         # along the x axis
