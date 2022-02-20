@@ -44,9 +44,6 @@ class PolarPoint(Vector):
 
     φ = phi
 
-    # Point is the native coordinate type.  Any other type is responsible for coversions
-    # both to and from that type.
-
     @staticmethod
     def len(n):
         try:
@@ -56,6 +53,8 @@ class PolarPoint(Vector):
 
     @classmethod
     def as_my_type(cls, the_other):
+        # Point is the native coordinate type.  Any other type is responsible for coversions
+        # both to and from that type.
         match the_other, cls.len(the_other):
 
             case [PolarPoint(), _]:
