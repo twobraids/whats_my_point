@@ -8,22 +8,26 @@ class Vector(tuple):
     def __new__(cls, *args):
         match (args):
             case [cls() as an_instance_of_cls]:
-                # match instances of this cls or derivatives
+                # match instances of the calling cls or its derivatives
+                # this is the identity case
                 return an_instance_of_cls
 
             case [Vector() as an_instance_of_vector]:
                 # match any instance of the Vector family not directly in line with cls
+                # explicitly invoke a conversion - maybe cartesian to polar or vice versa
                 return cls.as_my_type(an_instance_of_vector)
 
             case [Iterable() as an_iterable]:
                 # match any old iterable like a generator or numpy array
+                # create a new instance of this cls
                 return super().__new__(
                     cls,
                     tuple(cls._judge_candidate_value(n) for n in an_iterable),
                 )
 
             case args_:
-                # descrete values passed in rather than a collection
+                # discrete values were passed, assume they are to be the coordinate
+                # values of a new instance of this cls
                 return super().__new__(
                     cls, tuple(cls._judge_candidate_value(n) for n in args_)
                 )
@@ -37,12 +41,15 @@ class Vector(tuple):
 
     @classmethod
     def as_my_type(cls, the_other):
+        # Subclasses ought to override this method to reflect conversions for different
+        # interpretations of the vector components.
         match the_other:
             case cls():
-                # match of this cls or derivatives
+                # match of this cls or its derivatives
                 return the_other
             case _:
-                # match anything else and try to construct a new cls instance
+                # match anything else such as tuple or iterable.
+                # try to construct a new cls instance directly from the_other
                 return cls(the_other)
 
     def _operation(self, the_other, a_dyadic_fn):
@@ -69,7 +76,7 @@ class Vector(tuple):
                 return self.__class__(*starmap(a_dyadic_fn, zip(self, an_iterable)))
 
             case _:
-                # no idea how to convert for an operation
+                # no idea how to apply this value in a dyadic manner with this Vector instance
                 raise TypeError(f"{the_other} disallowed")
 
     def __add__(self, the_other):
@@ -101,8 +108,3 @@ class Vector(tuple):
 
     def dot(self, the_other):
         return sum(a * b for a, b in zip(self, the_other))
-
-    def transform(self, a_transform_matrix):
-        # a_transform_matrix intented to be a numpy ndarray
-        # or something with a similar API
-        return self.__class__(a_transform_matrix.dot(self))

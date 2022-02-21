@@ -6,13 +6,13 @@ from whats_my_point import (
     Point,
     PolarPoint,
     iter_linearly_between,
-    iter_no_consectutive_repeats,
 )
 
 from whats_my_point.polar import PolarPoint
 
 
 class Canvas:
+    # wrap the drawable image with a quicky interface to make the demo code look simpler.
     def __init__(self):
         self.an_image = Image.new("RGB", (400, 400), (0, 0, 0))
         self.a_drawable_image = ImageDraw.Draw(self.an_image)
@@ -44,15 +44,13 @@ def looping_spiral(a_canvas):
     # create a couple iterators that will produce a sequence of polar points
     # that spin in lockstep with each other
     for step_counter, (outer_rotator_point, inner_rotator_point) in enumerate(
-        iter_no_consectutive_repeats(
-            zip(
-                iter_linearly_between(
-                    outer_rotator_origin, outer_rotator_destination, 2000
-                ),
-                iter_linearly_between(
-                    inner_rotator_origin, inner_rotator_destination, 2000
-                ),
-            )
+        zip(
+            iter_linearly_between(
+                outer_rotator_origin, outer_rotator_destination, 2000
+            ),
+            iter_linearly_between(
+                inner_rotator_origin, inner_rotator_destination, 2000
+            ),
         )
     ):
         # add the cartesian origin point with values from the spinning polar points

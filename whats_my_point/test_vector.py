@@ -85,23 +85,6 @@ class TestVector(unittest.TestCase):
         self.assertTrue(isinstance(nd2, ndarray))
         self.assertEqual(v11, Vector(nd2))
 
-    def test_transform(self):
-        # identity transform
-        v1 = Vector(1, 3)
-        trans1 = array(((1, 0), (0, 1)))
-        v11 = v1.transform(trans1)
-        self.assertEqual(v1, v11)
-
-        # scaling
-        trans2 = array(((2, 0), (0, 3)))
-        v12 = v1.transform(trans2)
-        self.assertEqual(v12, v1 * (2, 3))
-
-        # rotation
-        trans3 = array(((0, -1), (1, 0)))
-        v13 = v1.transform(trans3)
-        self.assertEqual(v13, (-3, 1))
-
 
 if __name__ == "__main__":
     unittest.main()

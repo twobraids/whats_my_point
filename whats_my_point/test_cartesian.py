@@ -98,23 +98,6 @@ class TestPoint(unittest.TestCase):
         self.assertTrue(isinstance(nd2, ndarray))
         self.assertEqual(p11, Point(nd2))
 
-    def test_transform(self):
-        # identity transform
-        p1 = Point(1, 3)
-        trans1 = array(((1, 0), (0, 1)))
-        p11 = p1.transform(trans1)
-        self.assertEqual(p1, p11)
-
-        # scaling
-        trans2 = array(((2, 0), (0, 3)))
-        p12 = p1.transform(trans2)
-        self.assertEqual(p12, p1 * (2, 3))
-
-        # rotation
-        trans3 = array(((0, -1), (1, 0)))
-        p13 = p1.transform(trans3)
-        self.assertEqual(p13, (-3, 1))
-
 
 class TestRoundedPoint(unittest.TestCase):
     def test_IntPoint(self):

@@ -45,11 +45,15 @@ class PolarPoint(Vector):
     φ = phi
 
     @classmethod
-    def cartesian_as_polar(cls, a_cartesian_point):
+    def as_polar(cls, a_cartesian_point, target_polar_class=None):
+        # The base point type in this system is cartesian. Any classes within the family that
+        # iterpret coordinates differently must provide conversion both to and from cartesian.
+        if target_polar_class is None:
+            target_polar_class = cls
         match a_cartesian_point:
             case (x, y, z):
                 # 3D case
-                return cls(
+                return target_polar_class(
                     sqrt((x**2) + (y**2) + (z**2)),
                     atan2(y, x),
                     atan2(sqrt((x**2) + (y**2)), z),
@@ -57,7 +61,7 @@ class PolarPoint(Vector):
 
             case (x, y):
                 # 2D case
-                return cls(
+                return target_polar_class(
                     sqrt((x**2) + (y**2)),
                     atan2(y, x),
                 )
@@ -66,33 +70,6 @@ class PolarPoint(Vector):
                 raise TypeError(
                     f"Points must be 2D or 3D. Don't know how to convert {a_cartesian_point} to Polar"
                 )
-
-    @classmethod
-    def as_my_type(cls, the_other):
-        # Point is the native coordinate type.  Any other type is responsible for coversions
-        # both to and from that type.
-        match the_other:
-
-            case PolarPoint():
-                # identity case
-                return the_other
-
-            case Point() as a_cartesian_point:
-                # greater than 3D conversion case
-                return cls.cartesian_as_polar(a_cartesian_point)
-
-            case Iterable() as an_iterator:
-                # we don't know what this sequence represents.
-                # To be consistent with the constructor, assume they are
-                # series of components of a polar point
-                return cls(*an_iterator)
-
-            case Number() as n:
-                # a rare case where ρ is n and θ, φ are zero.
-                return cls(n)
-
-            case _:
-                raise TypeError(f"Don't know how to convert {the_other} to Polar")
 
     def as_cartesian(self, cartesian_point_class=Point):
         match len(self):
@@ -114,17 +91,39 @@ class PolarPoint(Vector):
                     f"No conversion defined for coordinates with {len(self)} members"
                 )
 
-    def as_polar(self, as_this_class):
-        if as_this_class is self.__class__:
-            return self
-        else:
-            return as_this_class(self)
+    @classmethod
+    def as_my_type(cls, the_other):
+        # This function is in charge of converting things into polar coordinates.
+        # The base class Vector has no sense of what its members mean, so members of the
+        # polar branch of the Vector family interpret base Vector instances and other
+        # Iterables as having polar values already.
+        match the_other:
+            case PolarPoint():
+                # identity case
+                return the_other
 
-        return None
+            case Point() as a_cartesian_point:
+                # we know this is the cartesian case, so we must explicitly convert it
+                return cls.as_polar(a_cartesian_point)
 
-    # arithmatic with polar coordinates is possible, but it is rather nightmarish
-    # Cartesian points are the base type, so arithmatic done by convsion to Point types
+            case Iterable() as an_iterator:
+                # we don't know what this sequence represents.
+                # To be consistent with the constructor, assume they are
+                # series of components of a polar point
+                return cls(*an_iterator)
 
+            case Number() as ρ:
+                # a rare case where a PolarPoint is specified with ρ alone and
+                # θ, φ are assumed to be zero.
+                return cls(ρ)
+
+            case _:
+                raise TypeError(f"Don't know how to convert {the_other} to Polar")
+
+    # Arithmetic with polar coordinates directly is possible, but it's rather nightmarishly complex.
+    # Since cartesian points are the base type, all arithmetic with PolarPoints is done by
+    # converting to cartesian first and then converting back to polar afterwards.
+    # In each case, the parameter, 'the_other', gets converted to cartesian only if necessary.
     def __add__(self, the_other):
         return PolarPoint(self.as_cartesian() + the_other)
 

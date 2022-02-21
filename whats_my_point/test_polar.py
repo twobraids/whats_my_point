@@ -64,7 +64,7 @@ class TestPolar(unittest.TestCase):
         pp2 = PolarPoint(2, π)
         self.assertEqual(pp1 + pp2, PolarPoint(1, π))
 
-        # with a perpenticular
+        # with a perpendicular
         pp1 = PolarPoint(4, 0)
         pp2 = PolarPoint(4, π / 2.0)
         pp_sum = pp1 + pp2
