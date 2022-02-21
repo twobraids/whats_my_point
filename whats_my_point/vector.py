@@ -25,11 +25,11 @@ class Vector(tuple):
                     tuple(cls._judge_candidate_value(n) for n in an_iterable),
                 )
 
-            case args_:
+            case _:
                 # discrete values were passed, assume they are to be the coordinate
                 # values of a new instance of this cls
                 return super().__new__(
-                    cls, tuple(cls._judge_candidate_value(n) for n in args_)
+                    cls, tuple(cls._judge_candidate_value(n) for n in args)
                 )
 
     @staticmethod
