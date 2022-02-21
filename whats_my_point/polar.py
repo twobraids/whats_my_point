@@ -44,51 +44,50 @@ class PolarPoint(Vector):
 
     φ = phi
 
-    @staticmethod
-    def len(n):
-        try:
-            return len(n)
-        except TypeError:
-            return None
+    @classmethod
+    def cartesian_as_polar(cls, a_cartesian_point):
+        match a_cartesian_point:
+            case (x, y, z):
+                # 3D case
+                return cls(
+                    sqrt((x**2) + (y**2) + (z**2)),
+                    atan2(y, x),
+                    atan2(sqrt((x**2) + (y**2)), z),
+                )
+
+            case (x, y):
+                # 2D case
+                return cls(
+                    sqrt((x**2) + (y**2)),
+                    atan2(y, x),
+                )
+
+            case _:
+                raise TypeError(
+                    f"Points must be 2D or 3D. Don't know how to convert {a_cartesian_point} to Polar"
+                )
 
     @classmethod
     def as_my_type(cls, the_other):
         # Point is the native coordinate type.  Any other type is responsible for coversions
         # both to and from that type.
-        match the_other, cls.len(the_other):
+        match the_other:
 
-            case [PolarPoint(), _]:
+            case PolarPoint():
                 # identity case
                 return the_other
 
-            case [Point() as p, 2]:
-                # 2D Cartesion conversion case
-                return cls(
-                    sqrt((p.x**2) + (p.y**2)),
-                    atan2(p.y, p.x),
-                )
-
-            case [Point() as p, 3]:
-                # 3D Cartesion conversion case
-                return cls(
-                    sqrt((p.x**2) + (p.y**2) + (p.z**2)),
-                    atan2(p.y, p.x),
-                    atan2(sqrt((p.x**2) + (p.y**2)), p.z),
-                )
-
-            case [Point() as p, _]:
+            case Point() as a_cartesian_point:
                 # greater than 3D conversion case
-                raise TypeError(
-                    f"{the_other} is greater than 3D, don't know how to convert to Polar"
-                )
+                return cls.cartesian_as_polar(a_cartesian_point)
 
-            case [Iterable() as an_iterator, _]:
+            case Iterable() as an_iterator:
                 # we don't know what this sequence represents.
                 # To be consistent with the constructor, assume they are
                 # series of components of a polar point
                 return cls(*an_iterator)
 
-            case [Number() as n, _]:
+            case Number() as n:
                 # a rare case where ρ is n and θ, φ are zero.
                 return cls(n)
 
