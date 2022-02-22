@@ -1,7 +1,7 @@
 from whats_my_point import Point
 
 
-def iter_no_consectutive_repeats(an_iterator):
+def no_consectutive_repeats_iter(an_iterator):
     previous_value = None
     for a_value in an_iterator:
         if a_value != previous_value:

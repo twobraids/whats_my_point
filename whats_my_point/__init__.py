@@ -6,4 +6,4 @@ from whats_my_point.cartesian import (
     create_RoundedNPoint_class,
 )
 from whats_my_point.polar import PolarPoint
-from whats_my_point.iterators import iter_no_consectutive_repeats, iter_linearly_between
+from whats_my_point.iterators import no_consectutive_repeats_iter, iter_linearly_between
