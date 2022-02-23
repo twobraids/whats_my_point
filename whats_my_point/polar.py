@@ -98,7 +98,7 @@ class PolarPoint(Vector):
         # polar branch of the Vector family interpret base Vector instances and other
         # Iterables as having polar values already.
         match the_other:
-            case PolarPoint():
+            case cls():
                 # identity case
                 return the_other
 
