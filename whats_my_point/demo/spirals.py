@@ -33,27 +33,30 @@ class Canvas:
 
 def draw_a_looping_spiral(a_canvas):
     # the middle of the image
-    origin_point = Point(a_canvas.the_image.size) / 2
+    origin_cartesian_point = Point(a_canvas.the_image.size) / 2
 
     # beginning and end polar points for two loops around a circle
     # while the radius of the loops shrink
-    outer_rotator_origin = PolarPoint(origin_point * (3.0 / 4.0, 0))
-    outer_rotator_destination = PolarPoint(0, 4.0 * π)
+    outer_rotator_polar_origin = PolarPoint(origin_cartesian_point * (3.0 / 4.0, 0))
+    outer_rotator_polar_destination = PolarPoint(0, 4.0 * π)
     outer_rotator_iter = iter_linearly_between(
-        outer_rotator_origin, outer_rotator_destination, 2000
+        outer_rotator_polar_origin, outer_rotator_polar_destination, 2000
     )
 
     # beginning and end polar points for fifty loops around a circle
     # with the loop diameter shrinking with each step
-    inner_rotator_origin = PolarPoint(origin_point * (1.0 / 8.0, 0))
-    inner_rotator_destination = PolarPoint(1, 100.0 * π)
+    inner_rotator_polar_origin = PolarPoint(origin_cartesian_point * (1.0 / 8.0, 0))
+    inner_rotator_polar_destination = PolarPoint(1, 100.0 * π)
     inner_rotator_iter = iter_linearly_between(
-        inner_rotator_origin, inner_rotator_destination, 2000
+        inner_rotator_polar_origin, inner_rotator_polar_destination, 2000
     )
 
     # create a couple iterators that will produce a sequence of polar points
     # that spin in lockstep with each other
-    for step_counter, (outer_rotated_point, inner_rotated_point) in enumerate(
+    for step_counter, (
+        outer_rotated_polar_point,
+        inner_rotated_polar_point,
+    ) in enumerate(
         no_consectutive_repeats_iter(
             zip(
                 outer_rotator_iter,
@@ -62,7 +65,11 @@ def draw_a_looping_spiral(a_canvas):
         )
     ):
         # add the cartesian origin point with values from the spinning polar points
-        current_point = origin_point + outer_rotated_point + inner_rotated_point
+        current_point = (
+            origin_cartesian_point
+            + outer_rotated_polar_point
+            + inner_rotated_polar_point
+        )
         # draw the line segment from prevous and current cartesian points
         a_canvas.draw_successive_line_segment(current_point, step_counter)
 
