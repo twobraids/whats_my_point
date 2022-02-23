@@ -5,7 +5,7 @@ from math import sin, cos, sqrt, atan2
 from math import pi as π
 
 
-from whats_my_point import Vector, Point
+from whats_my_point import Vector, CartesianPoint
 
 
 class PolarPoint(Vector):
@@ -71,7 +71,7 @@ class PolarPoint(Vector):
                     f"Points must be 2D or 3D. Don't know how to convert {a_cartesian_point} to Polar"
                 )
 
-    def as_cartesian(self, cartesian_point_class=Point):
+    def as_cartesian(self, cartesian_point_class=CartesianPoint):
         match len(self):
             case 2:
                 return cartesian_point_class(
@@ -102,7 +102,7 @@ class PolarPoint(Vector):
                 # identity case
                 return the_other
 
-            case Point() as a_cartesian_point:
+            case CartesianPoint() as a_cartesian_point:
                 # we know this is the cartesian case, so we must explicitly convert it
                 return cls.as_polar(a_cartesian_point)
 

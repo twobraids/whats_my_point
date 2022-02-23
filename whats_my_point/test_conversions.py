@@ -4,7 +4,7 @@ import unittest
 from collections.abc import Iterable
 from math import pi as π
 
-from whats_my_point import Vector, Point, IntPoint, PolarPoint
+from whats_my_point import Vector, CartesianPoint, IntPoint, PolarPoint
 
 
 class TestConversions(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestConversions(unittest.TestCase):
 
     def test_Vector_from_known_types(self):
         v = Vector(π, π)
-        cp = Point(2, 0)
+        cp = CartesianPoint(2, 0)
         cp_args = (2, 16)
         ip = IntPoint(3, 4)
         pp = PolarPoint(10, π)
@@ -45,35 +45,35 @@ class TestConversions(unittest.TestCase):
 
     def test_Point_from_known_types(self):
         v = Vector(π, π)
-        cp = Point(2, 0)
+        cp = CartesianPoint(2, 0)
         cp_args = (2, 16)
         ip = IntPoint(3, 4)
         pp = PolarPoint(10, π)
 
-        cp_v = Point(v)
+        cp_v = CartesianPoint(v)
         self.assertTrue(cp_v is not v)
         self.assertEqual(cp_v, v)
-        self.assertTrue(cp_v.__class__ is Point)
+        self.assertTrue(cp_v.__class__ is CartesianPoint)
 
-        cp_cp = Point(cp)
+        cp_cp = CartesianPoint(cp)
         self.assertTrue(cp_cp is cp)
 
-        cp_ip = Point(ip)
+        cp_ip = CartesianPoint(ip)
         self.assertTrue(cp_ip is ip)
 
-        cp_pp = Point(pp)
+        cp_pp = CartesianPoint(pp)
         self.assertTrue(cp_pp is not pp)
         self.assertAlmostEqual(cp_pp, (-10.0, 0))
-        self.assertTrue(cp_pp.__class__ is Point)
+        self.assertTrue(cp_pp.__class__ is CartesianPoint)
 
-        cp_a = Point(cp_args)
+        cp_a = CartesianPoint(cp_args)
         self.assertTrue(cp_a is not cp_args)
         self.assertEqual(cp_a, (2, 16))
         self.assertEqual(cp_a, cp_args)
 
     def test_IntPoint_from_known_types(self):
         v = Vector(π, π)
-        cp = Point(2.1, 8.6)
+        cp = CartesianPoint(2.1, 8.6)
         cp_args = (2, 16)
         ip = IntPoint(3, 4)
         pp = PolarPoint(10, π / 4)
@@ -103,7 +103,7 @@ class TestConversions(unittest.TestCase):
 
     def test_PolarPoint_from_known_types(self):
         v = Vector(π, π / 4)
-        cp = Point(2.1, 8.6)
+        cp = CartesianPoint(2.1, 8.6)
         ip = IntPoint(3, 4)
         pp = PolarPoint(10, π)
         pp_args = (10, π / 4.0)
@@ -136,31 +136,31 @@ class TestConversions(unittest.TestCase):
     def test_polar_to_cartesian_by_constructor(self):
         pp = PolarPoint(1, π / 2.0)
         cp = IntPoint(pp)
-        self.assertEqual(cp, Point(0, 1))
+        self.assertEqual(cp, CartesianPoint(0, 1))
 
         pp = PolarPoint(1, π)
         cp = IntPoint(pp)
-        self.assertEqual(cp, Point(-1, 0))
+        self.assertEqual(cp, CartesianPoint(-1, 0))
 
     def test_cartesian_to_polar_by_constructor_2D_round_trip(self):
         pp1 = PolarPoint(1, π / 2.0)
-        cp = Point(pp1)
+        cp = CartesianPoint(pp1)
         pp2 = PolarPoint(cp)
         self.assertEqual(pp1, pp2)
 
         pp1 = PolarPoint(1, π + π / 2.0)
-        cp = Point(pp1)
+        cp = CartesianPoint(pp1)
         pp2 = PolarPoint(cp)
         self.assertEqual(pp2.r, pp1.r)
         # here θ is the same angle, but measured from the other direction
         # the sum of two such angles should be π
         self.assertAlmostEqual(pp2.θ + pp1.θ, π, 8)
-        cp2 = Point(pp2)
+        cp2 = CartesianPoint(pp2)
         self.assertAlmostEqual(cp2, cp, 8)
 
     def test_cartesian_to_polar_by_constructor_3D_round_trip(self):
         pp3 = PolarPoint(1, π + π / 2.0, 3 * π / 5.0)
-        cp1 = Point(pp3)
+        cp1 = CartesianPoint(pp3)
         pp4 = PolarPoint(cp1)
         self.assertEqual(pp4.r, pp3.r)
         # here θ is the same angle, but measured from the other direction
@@ -168,45 +168,45 @@ class TestConversions(unittest.TestCase):
         self.assertAlmostEqual(pp4.θ + pp3.θ, π, 8)
         self.assertAlmostEqual(pp4.φ, pp3.φ, 8)
 
-        cp2 = Point(pp4)
+        cp2 = CartesianPoint(pp4)
         self.assertAlmostEqual(cp2, cp1)
 
     def test_more_conversions(self):
-        cp = Point(70.71, 70.71)
+        cp = CartesianPoint(70.71, 70.71)
         ip = IntPoint(cp)
         self.assertEqual(ip, (71, 71))
         pp = PolarPoint(cp)
-        cp2 = Point(pp)
+        cp2 = CartesianPoint(pp)
         self.assertAlmostEqual(cp, cp2, 8)
 
     def test_math_with_polar_and_cartesion(self):
         pp1 = PolarPoint(10, 0)
-        cp1 = Point(10, 0)
+        cp1 = CartesianPoint(10, 0)
         self.assertEqual(pp1 + cp1, (20, 0))
         self.assertEqual(cp1 + cp1, (20, 0))
 
         pp2 = PolarPoint(10, π)
-        cp2 = Point(2, 0)
+        cp2 = CartesianPoint(2, 0)
         cp3 = cp2 + pp2
         self.assertAlmostEqual(cp3, (-8.0, 0), 8)
-        self.assertTrue(isinstance(cp3, Point))
+        self.assertTrue(isinstance(cp3, CartesianPoint))
         pp3 = pp2 + cp2
         self.assertAlmostEqual(pp3, (8.0, π), 8)
         self.assertTrue(isinstance(pp3, PolarPoint))
 
         pp4 = PolarPoint(10, π * 1.75)
-        cp4 = Point(0, -10)
+        cp4 = CartesianPoint(0, -10)
         self.assertEqual(pp4 + cp4, PolarPoint(cp4 + pp4))
 
     def test_failure_of_math_with_polar_and_cartesian(self):
         pp = PolarPoint(range(5))
-        cp = Point((i * 10 for i in range(5)))
+        cp = CartesianPoint((i * 10 for i in range(5)))
         self.assertRaises(TypeError, lambda a, b: a + b, pp, cp)
         self.assertRaises(TypeError, lambda a, b: b + a, pp, cp)
 
     def test_math_with_polar_and_scalar(self):
         pp1 = PolarPoint(10, π / 3.0)
-        cp1 = Point(2, 2)
+        cp1 = CartesianPoint(2, 2)
         self.assertEqual(pp1 + 2, pp1 + cp1)
         self.assertEqual(pp1 * 2, pp1 * cp1)
         self.assertEqual(pp1 / 2, pp1 / cp1)
@@ -214,21 +214,21 @@ class TestConversions(unittest.TestCase):
         self.assertEqual(pp1**2, pp1**cp1)
 
     def test_as_my_type_1(self):
-        cp1 = Point(2.2, 3.3)
+        cp1 = CartesianPoint(2.2, 3.3)
         ip1 = IntPoint(4, 5)
         ip2 = ip1.as_my_type(cp1)
         self.assertTrue(isinstance(ip2, IntPoint))
         self.assertEqual(ip2, (2, 3))
 
     def test_as_my_type_2(self):
-        cp1 = Point(2.2, 3.3)
+        cp1 = CartesianPoint(2.2, 3.3)
         ip1 = IntPoint(4, 5)
         cp2 = cp1.as_my_type(ip1)
-        self.assertTrue(isinstance(cp2, Point))
+        self.assertTrue(isinstance(cp2, CartesianPoint))
         self.assertEqual(cp2, (4.0, 5.0))
 
     def test_as_my_type_3(self):
-        cp1 = Point(10, 10)
+        cp1 = CartesianPoint(10, 10)
         pp1 = PolarPoint(cp1)
         pp2 = pp1.as_my_type(cp1)
         self.assertEqual(pp1, pp2)
@@ -239,7 +239,7 @@ class TestConversions(unittest.TestCase):
         self.assertEqual(pp2, (3,))
 
     def test_as_my_type_5(self):
-        cp1 = Point(range(5))
+        cp1 = CartesianPoint(range(5))
         pp1 = PolarPoint(10, π / 3.0)
         self.assertRaises(TypeError, pp1.as_my_type, cp1)
 

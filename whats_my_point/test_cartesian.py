@@ -4,7 +4,7 @@ import unittest
 from numpy import array, ndarray
 
 from whats_my_point import (
-    Point,
+    CartesianPoint,
     IntPoint,
     create_RoundedNPoint_class,
 )
@@ -12,55 +12,55 @@ from whats_my_point import (
 
 class TestPoint(unittest.TestCase):
     def test_creation(self):
-        p1 = Point(1, 3)
-        self.assertTrue(isinstance(p1, Point))
+        p1 = CartesianPoint(1, 3)
+        self.assertTrue(isinstance(p1, CartesianPoint))
         self.assertEqual(p1.x, 1)
         self.assertEqual(p1.y, 3)
         self.assertEqual(p1, (1, 3))
 
-        p2 = Point(5, 6, 7)
-        self.assertTrue(isinstance(p2, Point))
+        p2 = CartesianPoint(5, 6, 7)
+        self.assertTrue(isinstance(p2, CartesianPoint))
         self.assertEqual(p2.x, 5)
         self.assertEqual(p2.y, 6)
         self.assertEqual(p2.z, 7)
         self.assertEqual(p2, (5, 6, 7))
 
         t1 = (9, 17)
-        p4 = Point(t1)
-        self.assertTrue(isinstance(p4, Point))
+        p4 = CartesianPoint(t1)
+        self.assertTrue(isinstance(p4, CartesianPoint))
         self.assertEqual(p4.x, 9)
         self.assertEqual(p4.y, 17)
         self.assertEqual(p4, (9, 17))
 
         t2 = (9, 17, 46)
-        p5 = Point(t2)
-        self.assertTrue(isinstance(p5, Point))
+        p5 = CartesianPoint(t2)
+        self.assertTrue(isinstance(p5, CartesianPoint))
         self.assertEqual(p5.x, 9)
         self.assertEqual(p5.y, 17)
         self.assertEqual(p5.z, 46)
         self.assertEqual(p5, (9, 17, 46))
 
     def test_identity(self):
-        p1 = Point(1, 3)
-        p3 = Point(p1)
-        self.assertTrue(isinstance(p3, Point))
+        p1 = CartesianPoint(1, 3)
+        p3 = CartesianPoint(p1)
+        self.assertTrue(isinstance(p3, CartesianPoint))
         self.assertTrue(p3 is p1)
 
     def test_bad_input(self):
         try:
-            Point((11, 26), 4)
+            CartesianPoint((11, 26), 4)
         except TypeError as e:
             self.assertTrue("(11, 26)" in str(e))
         try:
-            Point("x", "y", "z")
+            CartesianPoint("x", "y", "z")
         except TypeError as e:
             self.assertTrue("x" in str(e))
 
     def test_addition(self):
-        p1 = Point(1, 3)
-        p4 = Point(9, 17)
+        p1 = CartesianPoint(1, 3)
+        p4 = CartesianPoint(9, 17)
         p8 = p1 + p4
-        self.assertTrue(isinstance(p8, Point))
+        self.assertTrue(isinstance(p8, CartesianPoint))
         self.assertEqual(p8.x, 10)
         self.assertEqual(p8.y, 20)
         self.assertEqual(p8, (10, 20))
@@ -71,14 +71,14 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(p9, (11, 21))
 
     def test_multiplication(self):
-        p1 = Point(1, 3)
+        p1 = CartesianPoint(1, 3)
         p9 = p1 * 2
         self.assertEqual(p9.x, 2)
         self.assertEqual(p9.y, 6)
         self.assertEqual(p9, (2, 6))
 
-        p8 = Point(2.0, 4.0) * Point(2, 2)
-        self.assertTrue(isinstance(p8, Point))
+        p8 = CartesianPoint(2.0, 4.0) * CartesianPoint(2, 2)
+        self.assertTrue(isinstance(p8, CartesianPoint))
         self.assertEqual(p8.x, 4.0)
         self.assertEqual(p8.y, 8.0)
         self.assertEqual(p8, (4.0, 8.0))
@@ -90,13 +90,13 @@ class TestPoint(unittest.TestCase):
 
     def test_math_with_numpy(self):
         nd1 = array(range(4))
-        p10 = Point(nd1)
+        p10 = CartesianPoint(nd1)
         p11 = p10 + nd1
-        self.assertTrue(isinstance(p11, Point))
+        self.assertTrue(isinstance(p11, CartesianPoint))
         self.assertEqual(p11, (0, 2, 4, 6))
         nd2 = nd1 + p10
         self.assertTrue(isinstance(nd2, ndarray))
-        self.assertEqual(p11, Point(nd2))
+        self.assertEqual(p11, CartesianPoint(nd2))
 
 
 class TestRoundedPoint(unittest.TestCase):
@@ -109,7 +109,7 @@ class TestRoundedPoint(unittest.TestCase):
         ip = IntPoint(1.1, 2.5, 3.8)
         self.assertEqual(ip, (1, 2, 4))
 
-        p = Point(9.9, 10, -2.2)
+        p = CartesianPoint(9.9, 10, -2.2)
         ip = IntPoint(p)
         self.assertEqual(ip, (10, 10, -2))
 

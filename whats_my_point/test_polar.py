@@ -5,7 +5,7 @@ from math import pi as π
 from itertools import zip_longest
 from collections.abc import Iterable
 
-from whats_my_point import Vector, Point, IntPoint, PolarPoint
+from whats_my_point import Vector, CartesianPoint, IntPoint, PolarPoint
 
 
 class TestPolar(unittest.TestCase):
@@ -70,7 +70,7 @@ class TestPolar(unittest.TestCase):
         pp_sum = pp1 + pp2
         self.assertAlmostEqual(pp_sum, (5.656854249492381, π / 4.0), 8)
 
-        cp = Point(pp_sum)
+        cp = CartesianPoint(pp_sum)
         self.assertAlmostEqual(cp, (4.0, 4.0), 8)
 
 

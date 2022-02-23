@@ -1,4 +1,4 @@
-from whats_my_point import Point
+from whats_my_point import CartesianPoint
 
 
 def no_consectutive_repeats_iter(an_iterator):
@@ -16,7 +16,7 @@ def linear_transform(start, stop, number_of_iterations):
 
 
 def iter_linearly_between(
-    start_point, end_point, number_of_iterations, target_point_type=Point
+    start_point, end_point, number_of_iterations, target_point_type=CartesianPoint
 ):
     base_point_type = start_point.__class__
     for p in zip(

@@ -3,7 +3,7 @@
 import unittest
 from itertools import zip_longest
 
-from whats_my_point import Point, IntPoint, iter_linearly_between
+from whats_my_point import CartesianPoint, IntPoint, iter_linearly_between
 
 
 class TestIters(unittest.TestCase):
@@ -42,15 +42,15 @@ class TestIters(unittest.TestCase):
         )
 
     def test_iter_all_linear(self):
-        start_point = Point(10, 0)
-        end_point = Point(0, 10)
+        start_point = CartesianPoint(10, 0)
+        end_point = CartesianPoint(0, 10)
 
         expected_result_sequence = (
-            Point(10.0, 0.0),
-            Point(8.0, 2.0),
-            Point(6.0, 4.0),
-            Point(4.0, 6.0),
-            Point(2.0, 8.0),
+            CartesianPoint(10.0, 0.0),
+            CartesianPoint(8.0, 2.0),
+            CartesianPoint(6.0, 4.0),
+            CartesianPoint(4.0, 6.0),
+            CartesianPoint(2.0, 8.0),
         )
         self.compare_sequences(
             start_point, end_point, 5, iter_linearly_between, expected_result_sequence
