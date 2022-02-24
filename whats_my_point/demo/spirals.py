@@ -15,7 +15,7 @@ from whats_my_point.polar import PolarPoint
 class Canvas:
     # wrap the drawable image with a quicky interface to make the demo code look simpler.
     def __init__(self):
-        self.the_image = Image.new("RGB", (400, 400), (0, 0, 0))
+        self.the_image = Image.new("RGB", (900, 900), (0, 0, 0))
         self.the_drawable_image = ImageDraw.Draw(self.the_image)
         self.image_counter = 0
         self.previous_point = None
@@ -23,7 +23,7 @@ class Canvas:
     def draw_successive_line_segment(self, end_point, step_counter):
         if self.previous_point is not None:
             self.the_drawable_image.line(
-                (self.previous_point, end_point), fill="rgb(0, 255, 0)"
+                (self.previous_point, end_point), fill="rgb(0, 255, 0)", width=4
             )
             if not (step_counter % 5):
                 self.the_image.save(f"./spiral_{self.image_counter:04d}.png")
@@ -33,11 +33,11 @@ class Canvas:
 
 def draw_a_looping_spiral(a_canvas):
     # the middle of the image
-    origin_cartesian_point = CartesianPoint(a_canvas.the_image.size) / 2
+    cartesian_middle_point = CartesianPoint(a_canvas.the_image.size) / 2
 
     # beginning and end polar points for two loops around a circle
     # while the radius of the loop shrink
-    larger_rotator_polar_origin = PolarPoint(origin_cartesian_point * (3.0 / 4.0, 0))
+    larger_rotator_polar_origin = PolarPoint(cartesian_middle_point * (3.0 / 4.0, 0))
     larger_rotator_polar_destination = PolarPoint(0, 4.0 * π)
     larger_rotator_iter = iter_linearly_between(
         larger_rotator_polar_origin, larger_rotator_polar_destination, 2000
@@ -45,7 +45,7 @@ def draw_a_looping_spiral(a_canvas):
 
     # beginning and end polar points for fifty loops around a circle
     # with the loop radius shrinking with each step
-    smaller_rotator_polar_origin = PolarPoint(origin_cartesian_point * (1.0 / 8.0, 0))
+    smaller_rotator_polar_origin = PolarPoint(cartesian_middle_point * (1.0 / 8.0, 0))
     smaller_rotator_polar_destination = PolarPoint(0, 100.0 * π)
     smaller_rotator_iter = iter_linearly_between(
         smaller_rotator_polar_origin, smaller_rotator_polar_destination, 2000
@@ -64,9 +64,9 @@ def draw_a_looping_spiral(a_canvas):
             )
         )
     ):
-        # add the cartesian origin CartesianPoint with values from the spinning polar points
+        # add the cartesian middle point with the spinning polar points
         current_cartesion_point = (
-            origin_cartesian_point
+            cartesian_middle_point
             + larger_rotated_polar_point
             + smaller_rotated_polar_point
         )

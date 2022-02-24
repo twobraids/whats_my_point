@@ -6,7 +6,7 @@ from operator import sub, add, mul, truediv, floordiv, pow
 
 class Vector(tuple):
     def __new__(cls, *args):
-        match (args):
+        match args:
             case [cls() as an_instance_of_cls]:
                 # match instances of the calling cls or its derivatives
                 # this is the identity case
@@ -55,7 +55,7 @@ class Vector(tuple):
     def _operation(self, the_other, a_dyadic_fn):
         # return a new instance with members that result from a_dyadic_fn applied to
         # this instance zipped with the_other
-        match (the_other):
+        match the_other:
             case Number() as a_number:
                 # match scalars
                 return self.__class__(
