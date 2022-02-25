@@ -9,8 +9,6 @@ from whats_my_point import (
     no_consectutive_repeats_iter,
 )
 
-from whats_my_point.polar import PolarPoint
-
 
 class Canvas:
     # wrap the drawable image with a quicky interface to make the demo code look simpler.
