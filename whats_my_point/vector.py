@@ -50,7 +50,7 @@ class Vector(tuple):
             case _:
                 # match anything else such as tuple or iterable.
                 # try to construct a new cls instance directly from the_other
-                return cls(the_other)
+                return cls(*the_other)
 
     def _operation(self, the_other, a_dyadic_fn):
         # return a new instance with members that result from a_dyadic_fn applied to
