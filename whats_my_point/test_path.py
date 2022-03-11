@@ -4,9 +4,7 @@ import unittest
 from itertools import cycle
 from collections.abc import Iterable
 from math import pi as π
-from whats_my_point import Vector, CartesianPoint, PolarPoint, iter_linearly_between
-
-from whats_my_point.path import Path
+from whats_my_point import Vector, CartesianPoint, PolarPoint, Path, iter_uniform_steps_between
 
 
 class TestPath(unittest.TestCase):
@@ -48,7 +46,7 @@ class TestPath(unittest.TestCase):
     def test_create_with_iterator(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
-        path1 = Path(iter_linearly_between(cp1, cp2, 5))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 5))
         self.assertAlmostEqual(
             path1, ((0.0, 0.0), (20.0, 30.0), (40.0, 60.0), (60.0, 90.0), (80.0, 120.0))
         )
@@ -56,7 +54,7 @@ class TestPath(unittest.TestCase):
     def test_create_identity(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
-        path1 = Path(iter_linearly_between(cp1, cp2, 5))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 5))
         path2 = Path(path1)
         self.assertTrue(path2 is path1)
 
@@ -68,7 +66,7 @@ class TestPath(unittest.TestCase):
     def test_addition_with_scalar(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
-        path1 = Path(iter_linearly_between(cp1, cp2, 5))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 5))
         path2 = path1 + 1
         self.assertAlmostEqual(
             path2, ((1.0, 1.0), (21.0, 31.0), (41.0, 61.0), (61.0, 91.0), (81.0, 121.0))
@@ -78,7 +76,7 @@ class TestPath(unittest.TestCase):
     def test_addition_with_point(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
-        path1 = Path(iter_linearly_between(cp1, cp2, 5))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 5))
         path2 = path1 + CartesianPoint(1, 2)
         self.assertAlmostEqual(
             path2, ((1.0, 2.0), (21.0, 32.0), (41.0, 62.0), (61.0, 92.0), (81.0, 122.0))
@@ -88,7 +86,7 @@ class TestPath(unittest.TestCase):
     def test_addition_with_polarpoint(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
-        path1 = Path(iter_linearly_between(cp1, cp2, 5))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 5))
         path2 = path1 + PolarPoint(10, π / 2)
         self.assertAlmostEqual(
             path2,
@@ -105,7 +103,7 @@ class TestPath(unittest.TestCase):
     def test_polar_addition_with_polarpoint(self):
         cp1 = PolarPoint(0, 0)
         cp2 = PolarPoint(100, 2.0 * π)
-        path1 = Path(iter_linearly_between(cp1, cp2, 4, PolarPoint))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 4, PolarPoint))
         path2 = path1 + PolarPoint(10, π / 2)
         self.assertAlmostEqual(
             path2,
@@ -121,7 +119,7 @@ class TestPath(unittest.TestCase):
     def test_multiplication_with_scalar(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
-        path1 = Path(iter_linearly_between(cp1, cp2, 5))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 5))
         path2 = path1 * 2
         self.assertAlmostEqual(
             path2,
@@ -132,7 +130,7 @@ class TestPath(unittest.TestCase):
     def test_multiplication_with_cartesian(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
-        path1 = Path(iter_linearly_between(cp1, cp2, 5))
+        path1 = Path(iter_uniform_steps_between(cp1, cp2, 5))
         path2 = path1 * CartesianPoint(2, 3)
         self.assertAlmostEqual(
             path2,

@@ -5,7 +5,7 @@ from math import pi as π
 from itertools import zip_longest
 from collections.abc import Iterable
 
-from whats_my_point import Vector, CartesianPoint, IntPoint, PolarPoint
+from whats_my_point import CartesianPoint, PolarPoint
 
 
 class TestPolar(unittest.TestCase):

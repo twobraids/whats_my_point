@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw
 from whats_my_point import (
     CartesianPoint,
     PolarPoint,
-    iter_linearly_between,
+    iter_uniform_steps_between,
     no_consectutive_repeats_iter,
 )
 
@@ -37,7 +37,7 @@ def draw_a_looping_spiral(a_canvas):
     # while the radius of the loop shrink
     larger_rotator_polar_origin = PolarPoint(cartesian_middle_point * (3.0 / 4.0, 0))
     larger_rotator_polar_destination = PolarPoint(0, 4.0 * π)
-    larger_rotator_iter = iter_linearly_between(
+    larger_rotator_iter = iter_uniform_steps_between(
         larger_rotator_polar_origin, larger_rotator_polar_destination, 2000
     )
 
@@ -45,7 +45,7 @@ def draw_a_looping_spiral(a_canvas):
     # with the loop radius shrinking with each step
     smaller_rotator_polar_origin = PolarPoint(cartesian_middle_point * (1.0 / 8.0, 0))
     smaller_rotator_polar_destination = PolarPoint(0, 100.0 * π)
-    smaller_rotator_iter = iter_linearly_between(
+    smaller_rotator_iter = iter_uniform_steps_between(
         smaller_rotator_polar_origin, smaller_rotator_polar_destination, 2000
     )
 

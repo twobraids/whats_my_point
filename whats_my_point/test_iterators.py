@@ -3,7 +3,7 @@
 import unittest
 from itertools import zip_longest
 
-from whats_my_point import CartesianPoint, IntPoint, iter_linearly_between
+from whats_my_point import CartesianPoint, IntPoint, iter_uniform_steps_between
 
 
 class TestIters(unittest.TestCase):
@@ -53,7 +53,11 @@ class TestIters(unittest.TestCase):
             CartesianPoint(2.0, 8.0),
         )
         self.compare_sequences(
-            start_point, end_point, 5, iter_linearly_between, expected_result_sequence
+            start_point,
+            end_point,
+            5,
+            iter_uniform_steps_between,
+            expected_result_sequence,
         )
 
         expected_result_sequence = (
@@ -66,7 +70,11 @@ class TestIters(unittest.TestCase):
         # this function automatically requests that the iter_linear_transition convert to
         # same type as the type of the first item in the expected_result_sequence
         self.compare_sequences(
-            start_point, end_point, 5, iter_linearly_between, expected_result_sequence
+            start_point,
+            end_point,
+            5,
+            iter_uniform_steps_between,
+            expected_result_sequence,
         )
 
 

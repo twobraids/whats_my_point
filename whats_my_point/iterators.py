@@ -1,4 +1,5 @@
-from whats_my_point import CartesianPoint
+from numbers import Number
+from whats_my_point import Vector
 
 
 def no_consectutive_repeats_iter(an_iterator):
@@ -9,20 +10,26 @@ def no_consectutive_repeats_iter(an_iterator):
         previous_value = a_value
 
 
-def linear_transform(start, stop, number_of_iterations):
-    increment = (stop - start) / number_of_iterations
-    for i in range(number_of_iterations):
-        yield start + (increment * i)
-
-
-def iter_linearly_between(
-    start_point, end_point, number_of_iterations, target_point_type=CartesianPoint
+def iter_uniform_steps_between(
+    start, stop, number_of_iterations, target_type=lambda n: n
 ):
-    base_point_type = start_point.__class__
-    for p in zip(
-        *(
-            linear_transform(x, y, number_of_iterations)
-            for x, y in zip(start_point, end_point)
-        )
-    ):
-        yield target_point_type(base_point_type(*p))
+    match start:
+        case Number():
+            increment = (stop - start) / number_of_iterations
+            for i in range(number_of_iterations):
+                yield target_type(start + (increment * i))
+
+        case Vector():
+            base_point_type = start.__class__
+            for p in zip(
+                *(
+                    iter_uniform_steps_between(x, y, number_of_iterations)
+                    for x, y in zip(start, stop)
+                )
+            ):
+                yield target_type(base_point_type(*p))
+
+        case _:
+            raise TypeError(
+                f'start value must be scalar or Vector type: {start} is not.'
+            )
