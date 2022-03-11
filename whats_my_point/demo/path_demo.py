@@ -5,10 +5,8 @@ from more_itertools import windowed
 
 from whats_my_point import (
     CartesianPoint,
-    IntPoint,
     PolarPoint,
     iter_uniform_steps_between,
-    no_consectutive_repeats_iter,
     Path,
 )
 

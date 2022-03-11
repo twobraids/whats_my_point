@@ -2,9 +2,6 @@ from collections.abc import Iterable
 from numbers import Number
 from math import sin, cos, sqrt, atan2
 
-from math import pi as π
-
-
 from whats_my_point import Vector, CartesianPoint
 
 

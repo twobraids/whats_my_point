@@ -5,9 +5,6 @@ from whats_my_point.cartesian import (
     IntPoint,
     create_RoundedNPoint_class,
 )
-
-Point = CartesianPoint
-
 from whats_my_point.polar import PolarPoint
 from whats_my_point.iterators import (
     no_consectutive_repeats_iter,
@@ -15,3 +12,5 @@ from whats_my_point.iterators import (
 )
 
 from whats_my_point.path import Path
+
+Point = CartesianPoint
