@@ -6,7 +6,8 @@ from more_itertools import windowed
 from whats_my_point import (
     CartesianPoint,
     PolarPoint,
-    iter_uniform_steps_between,
+    iter_linear_steps_between,
+    iter_natural_steps_between,
     Path,
 )
 
@@ -41,16 +42,16 @@ def draw_path_demo(a_canvas):
 
     collection_of_ray_paths = []
 
-    for θ in iter_uniform_steps_between(0, 2 * π, 9):
+    for θ in iter_linear_steps_between(0, 2 * π, 9):
 
         # materialize a path of PolarPoints making a straight ray from the origin
         ray_path = Path(
-            iter_uniform_steps_between(PolarPoint(0, θ), PolarPoint(300, θ), 100)
+            iter_linear_steps_between(PolarPoint(0, θ), PolarPoint(300, θ), 100)
         )
 
         # materialize a spiral path of PolarPoints about the origin
         spiral_path = Path(
-            iter_uniform_steps_between(PolarPoint(0, 0), PolarPoint(50, 10 * π), 100)
+            iter_natural_steps_between(PolarPoint(0, 0), PolarPoint(50, 10 * π), 100)
         )
 
         # combine the straight rays with the spiral path and translate them

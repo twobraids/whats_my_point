@@ -9,7 +9,7 @@ from whats_my_point import (
     CartesianPoint,
     IntPoint,
     PolarPoint,
-    iter_uniform_steps_between,
+    iter_linear_steps_between,
     Path,
 )
 
@@ -81,7 +81,7 @@ class TestIters(unittest.TestCase):
             start_point,
             end_point,
             5,
-            iter_uniform_steps_between,
+            iter_linear_steps_between,
             expected_result_sequence,
         )
 
@@ -102,7 +102,7 @@ class TestIters(unittest.TestCase):
             start_point,
             end_point,
             5,
-            iter_uniform_steps_between,
+            iter_linear_steps_between,
             expected_result_sequence,
         )
 
@@ -116,7 +116,7 @@ class TestIters(unittest.TestCase):
             CartesianPoint(16.0, 0.9424777960769379),
             CartesianPoint(18.0, 1.2566370614359172),
         )
-        cpath1 = Path(p for p in iter_uniform_steps_between(cp1, cp2, 5))
+        cpath1 = Path(p for p in iter_linear_steps_between(cp1, cp2, 5))
         for p1, e1 in zip(cpath1, expected_result_CartesianPoint_sequence):
             self.assertEqual(p1, e1)
 
@@ -130,7 +130,7 @@ class TestIters(unittest.TestCase):
             self.assertAlmostEqual(p1, e1)
 
         ppath1 = Path(
-            p for p in iter_uniform_steps_between(polar_start_point, polar_end_point, 5)
+            p for p in iter_linear_steps_between(polar_start_point, polar_end_point, 5)
         )
         for p1, e1 in zip(ppath1, expected_result_PolarPoint_sequence):
             self.assertAlmostEqual(p1, e1)

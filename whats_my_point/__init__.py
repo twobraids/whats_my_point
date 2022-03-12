@@ -8,7 +8,8 @@ from whats_my_point.cartesian import (
 from whats_my_point.polar import PolarPoint
 from whats_my_point.iterators import (
     no_consectutive_repeats_iter,
-    iter_uniform_steps_between,
+    iter_linear_steps_between,
+    iter_natural_steps_between,
 )
 
 from whats_my_point.path import Path
