@@ -8,7 +8,7 @@ from whats_my_point import Vector, CartesianPoint, PolarPoint
 class Path(Vector):
     @classmethod
     def _judge_candidate_value(cls, a_potential_point):
-        # accept only scalars as values
+        # accept only instances of Vector as values for a Path
         if isinstance(a_potential_point, Vector):
             return a_potential_point
         raise TypeError(
@@ -28,6 +28,7 @@ class Path(Vector):
                 )
 
             case self.__class__() as a_path_object:
+                # match an instance of another Path
                 return self.__class__(*starmap(a_dyadic_fn, zip(self, a_path_object)))
 
             case CartesianPoint() | PolarPoint():
