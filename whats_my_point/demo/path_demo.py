@@ -1,4 +1,7 @@
 #!/usr/bin/env python3.10
+
+# WARNING - this script makes almost 100 images for assembly into a video
+
 from math import pi as π
 from PIL import Image, ImageDraw
 from more_itertools import windowed
