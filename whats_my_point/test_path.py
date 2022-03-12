@@ -101,19 +101,12 @@ class TestPath(unittest.TestCase):
         self.assertEqual((x.__class__ for x in path2), cycle((CartesianPoint,)))
 
     def test_polar_addition_with_polarpoint(self):
-        cp1 = PolarPoint(0, 0)
-        cp2 = PolarPoint(100, 2.0 * π)
-        path1 = Path(iter_uniform_steps_between(cp1, cp2, 4, PolarPoint))
+        pp1 = PolarPoint(0, 0)
+        pp2 = PolarPoint(100, 2.0 * π)
+        path1 = Path(iter_uniform_steps_between(pp1, pp2, 4))
         path2 = path1 + PolarPoint(10, π / 2)
-        self.assertAlmostEqual(
-            path2,
-            (
-                PolarPoint(0, 0) + PolarPoint(10, π / 2),
-                PolarPoint(25, π / 2.0) + PolarPoint(10, π / 2),
-                PolarPoint(50, π) + PolarPoint(10, π / 2),
-                PolarPoint(75, 6.0 * π / 4.0) + PolarPoint(10, π / 2),
-            ),
-        )
+        expected_path = Path(p + PolarPoint(10, π / 2) for p in path1)
+        self.assertAlmostEqual(path2, expected_path)
         self.assertEqual((x.__class__ for x in path2), cycle((PolarPoint,)))
 
     def test_multiplication_with_scalar(self):

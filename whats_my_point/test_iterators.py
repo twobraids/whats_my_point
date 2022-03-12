@@ -1,12 +1,36 @@
 #!/usr/bin/env python3.10
 
 import unittest
+from collections.abc import Iterable
 from itertools import zip_longest
+from math import pi as π
 
-from whats_my_point import CartesianPoint, IntPoint, iter_uniform_steps_between
+from whats_my_point import (
+    CartesianPoint,
+    IntPoint,
+    PolarPoint,
+    iter_uniform_steps_between,
+    Path,
+)
 
 
 class TestIters(unittest.TestCase):
+    def assertAlmostEqual(self, first, second, places=None, msg=None, delta=None):
+        # extend assertAlmostEqual to work with types based on Iterable
+        match first, second:
+            case [Iterable(), Iterable()]:
+                for i, (first_element, second_element) in enumerate(zip(first, second)):
+                    try:
+                        self.assertAlmostEqual(
+                            first_element, second_element, places, msg, delta
+                        )
+                    except Exception as x:
+                        raise AssertionError(
+                            f"item #{i}, {first_element}, {second_element}: {str(x)}"
+                        )
+            case _:
+                super().assertAlmostEqual(first, second, places, msg, delta)
+
     def compare_sequences(
         self,
         start_polar_point,
@@ -32,6 +56,7 @@ class TestIters(unittest.TestCase):
                 expected_point,
                 f"[{i}] {a_point} is not the same as {expected_point} ",
             )
+            self.assertEqual(a_point.__class__, expected_point.__class__)
         self.assertFalse(
             i < expected_length,
             f"iterator produced too few: expected {expected_length} not {i}",
@@ -41,7 +66,7 @@ class TestIters(unittest.TestCase):
             f"iterator produced too many: expected {expected_length} not {i}",
         )
 
-    def test_iter_all_linear(self):
+    def test_iter_cartesian_linear(self):
         start_point = CartesianPoint(10, 0)
         end_point = CartesianPoint(0, 10)
 
@@ -60,6 +85,10 @@ class TestIters(unittest.TestCase):
             expected_result_sequence,
         )
 
+    def test_iter_intpoint_linear(self):
+        start_point = IntPoint(10, 0)
+        end_point = IntPoint(0, 10)
+
         expected_result_sequence = (
             IntPoint(10, 0),
             IntPoint(8, 2),
@@ -76,6 +105,35 @@ class TestIters(unittest.TestCase):
             iter_uniform_steps_between,
             expected_result_sequence,
         )
+
+    def test_iter_polarpoint_linear(self):
+        cp1 = CartesianPoint(10, 0)
+        cp2 = CartesianPoint(20, π / 2.0)
+        expected_result_CartesianPoint_sequence = Path(
+            CartesianPoint(10, 0),
+            CartesianPoint(12.0, 0.3141592653589793),
+            CartesianPoint(14.0, 0.6283185307179586),
+            CartesianPoint(16.0, 0.9424777960769379),
+            CartesianPoint(18.0, 1.2566370614359172),
+        )
+        cpath1 = Path(p for p in iter_uniform_steps_between(cp1, cp2, 5))
+        for p1, e1 in zip(cpath1, expected_result_CartesianPoint_sequence):
+            self.assertEqual(p1, e1)
+
+        polar_start_point = PolarPoint(cp1)
+        polar_end_point = PolarPoint(cp2)
+        expected_result_PolarPoint_sequence = Path(
+            PolarPoint(p) for p in expected_result_CartesianPoint_sequence
+        )
+        eee = Path(CartesianPoint(p) for p in expected_result_PolarPoint_sequence)
+        for p1, e1 in zip(eee, expected_result_CartesianPoint_sequence):
+            self.assertAlmostEqual(p1, e1)
+
+        ppath1 = Path(
+            p for p in iter_uniform_steps_between(polar_start_point, polar_end_point, 5)
+        )
+        for p1, e1 in zip(ppath1, expected_result_PolarPoint_sequence):
+            self.assertAlmostEqual(p1, e1)
 
 
 if __name__ == "__main__":
