@@ -115,6 +115,33 @@ class TestPath(unittest.TestCase):
         self.assertAlmostEqual(path2, expected_path)
         self.assertEqual((x.__class__ for x in path2), cycle((PolarPoint,)))
 
+    def test_multiplication_with_an_iterator_of_cartesian(self):
+        cp1 = CartesianPoint(0, 0)
+        cp2 = CartesianPoint(100, 150)
+        path1 = Path(iter_linear_steps_between(cp1, cp2, 5))
+        path2 = list(iter_linear_steps_between(cp2, cp1, 5))
+        path3 = path1 + path2
+        expected_path = Path([cp2] * 5)
+        self.assertAlmostEqual(path3, expected_path)
+
+    def test_multiplication_with_an_iterator_of_polar(self):
+        pp1 = PolarPoint(0, 0)
+        pp2 = PolarPoint(100, 2.0 * π)
+        path1 = Path(iter_linear_steps_between(pp1, pp2, 5))
+        path2 = list(iter_linear_steps_between(pp2, pp1, 5))
+        path3 = path1 + path2
+        expected_path = Path([PolarPoint(100, 0)] * 5)
+        self.assertAlmostEqual(path3, expected_path)
+
+    def test_multiplication_with_an_iterator_of_tuples(self):
+        cp1 = CartesianPoint(0, 0)
+        cp2 = CartesianPoint(100, 150)
+        path1 = Path(iter_linear_steps_between(cp1, cp2, 5))
+        path2 = ((100, 150), (80.0, 120.0), (60.0, 90.0), (40.0, 60.0), (20.0, 30.0))
+        path3 = path1 + path2
+        expected_path = Path([cp2] * 5)
+        self.assertAlmostEqual(path3, expected_path)
+
     def test_multiplication_with_scalar(self):
         cp1 = CartesianPoint(0, 0)
         cp2 = CartesianPoint(100, 150)
