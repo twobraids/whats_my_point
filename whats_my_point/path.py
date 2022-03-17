@@ -19,20 +19,8 @@ class Path(Vector):
         # return a new instance with members that result from a_dyadic_fn applied to
         # this instance zipped with the_other
         match the_other:
-            case Number() as a_number:
-                # match scalars
-                return self.__class__(
-                    *starmap(
-                        a_dyadic_fn, zip_longest(self, (a_number,), fillvalue=a_number)
-                    )
-                )
-
-            case self.__class__() as a_path_object:
-                # match an instance of another Path
-                return self.__class__(*starmap(a_dyadic_fn, zip(self, a_path_object)))
-
-            case CartesianPoint() | PolarPoint():
-                # match any instance of the two point families
+            case Number() | CartesianPoint() | PolarPoint():
+                # match scalars or any instances of the two point families
                 return self.__class__(
                     *starmap(
                         a_dyadic_fn,
@@ -40,9 +28,9 @@ class Path(Vector):
                     )
                 )
 
-            case Iterable() as an_iterable:
-                # match any other type of iterable
-                return self.__class__(*starmap(a_dyadic_fn, zip(self, an_iterable)))
+            case Iterable():
+                # match an instance of another Path or an arbitrary iterable
+                return self.__class__(*starmap(a_dyadic_fn, zip(self, the_other)))
 
             case _:
                 # no idea how to apply this value in a dyadic manner with this Vector instance
