@@ -28,8 +28,9 @@ class Path(Vector):
                     )
                 )
 
-            case self.__class__() | Iterable():
-                # match an instance of another Path
+            case Iterable():
+                # match an instance any other iterable,
+                # including another instance of Path
                 return self.__class__(*starmap(a_dyadic_fn, zip(self, the_other)))
 
             case _:
